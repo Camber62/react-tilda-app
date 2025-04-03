@@ -1,7 +1,7 @@
 // src/ChatWindow.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import './ChatWindow.css';
-import { Button, Spin } from 'antd';
+import { Button, Spin, Input, Form, message } from 'antd';
 import { SendOutlined, CloseOutlined } from '@ant-design/icons';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { init_chat } from '../api/init_chat';
@@ -16,11 +16,25 @@ interface Message {
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const [socketUrl, setSocketUrl] = useState<string | undefined>(undefined);
+  const [isConnected, setIsConnected] = useState(false);
   const processedMessageIds = useRef<Set<string>>(new Set());
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleConnect = async (values: { chatId: string }) => {
+    try {
+      setIsInitialLoading(true);
+      const response = await init_chat(values.chatId);
+      setChatId(response.data.chat_id);
+      setIsConnected(true);
+    } catch (error) {
+      console.error('Ошибка при инициализации чата:', error);
+      message.error('Ошибка подключения к чату. Проверьте ID и попробуйте снова.');
+      setIsInitialLoading(false);
+    }
+  };
 
   // Инициализация чата
   useEffect(() => {
@@ -135,44 +149,64 @@ const ChatWindow: React.FC = () => {
 
   return (
     <div className="chat-container">
-      <Button
-        type="text"
-        icon={<CloseOutlined />}
-        onClick={closeChat}
-        className="close-button"
-      />
-      <div ref={chatContainerRef} className="messages-container">
-        {isInitialLoading && (
-          <div className="loading-container" style={{ textAlign: 'center', padding: '20px' }}>
-            <Spin />
-            <div style={{ marginTop: '8px', color: '#666' }}>Подключение к чату...</div>
+      {!isConnected ? (
+        <div className="connect-form">
+          <Form onFinish={handleConnect}>
+            <Form.Item
+              name="chatId"
+              rules={[{ required: true, message: 'Пожалуйста, введите ID чата' }]}
+            >
+              <Input placeholder="Введите ID чата" disabled={isInitialLoading} />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={isInitialLoading}>
+                Подключиться
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      ) : (
+        <>
+          <Button
+            type="text"
+            icon={<CloseOutlined />}
+            onClick={closeChat}
+            className="close-button"
+          />
+          <div ref={chatContainerRef} className="messages-container">
+            {isInitialLoading && (
+              <div className="loading-container" style={{ textAlign: 'center', padding: '20px' }}>
+                <Spin />
+                <div style={{ marginTop: '8px', color: '#666' }}>Подключение к чату...</div>
+              </div>
+            )}
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`message ${message.isUser ? 'user-message' : 'other-message'}`}
+              >
+                <span className="text">{message.text}</span>
+              </div>
+            ))}
           </div>
-        )}
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`message ${message.isUser ? 'user-message' : 'other-message'}`}
-          >
-            <span className="text">{message.text}</span>
+          <div className="input-container">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Введите сообщение"
+              disabled={isInitialLoading}
+              className="input-field"
+            />
+            <Button
+              icon={<SendOutlined />}
+              onClick={sendMessage}
+              disabled={isInitialLoading}
+              className="send-button"
+            />
           </div>
-        ))}
-      </div>
-      <div className="input-container">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Введите сообщение"
-          disabled={isInitialLoading}
-          className="input-field"
-        />
-        <Button
-          icon={<SendOutlined />}
-          onClick={sendMessage}
-          disabled={isInitialLoading}
-          className="send-button"
-        />
-      </div>
+        </>
+      )}
     </div>
   );
 };
