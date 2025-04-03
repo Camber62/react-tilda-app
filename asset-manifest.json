@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-tilda-app/static/css/main.4adebf29.css",
+    "main.js": "/react-tilda-app/static/js/main.b14b08a7.js",
+    "index.html": "/react-tilda-app/index.html",
+    "main.4adebf29.css.map": "/react-tilda-app/static/css/main.4adebf29.css.map",
+    "main.b14b08a7.js.map": "/react-tilda-app/static/js/main.b14b08a7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4adebf29.css",
+    "static/js/main.b14b08a7.js"
+  ]
+}
