@@ -2,10 +2,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './ChatWindow.css';
 import { Button, Spin, Input, Form, message } from 'antd';
-import { SendOutlined, CloseOutlined } from '@ant-design/icons';
+import { SendOutlined, CloseOutlined, AudioOutlined } from '@ant-design/icons';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { init_chat } from '../api/init_chat';
 import { WebSocketMessage } from '../type/types';
+import { textToSpeechAPI } from '../api/textToSpeech';
+import { microphoneRunRecognizeAPI } from '../api/microphoneRecognize';
 
 interface Message {
   id: string;
@@ -20,8 +22,11 @@ const ChatWindow: React.FC = () => {
   const [chatId, setChatId] = useState<string | null>(null);
   const [socketUrl, setSocketUrl] = useState<string | undefined>(undefined);
   const [isConnected, setIsConnected] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const processedMessageIds = useRef<Set<string>>(new Set());
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   const handleConnect = async (values: { chatId: string }) => {
     try {
@@ -94,6 +99,21 @@ const ChatWindow: React.FC = () => {
         };
         setMessages((prev) => [...prev, newMessage]);
         setIsInitialLoading(false);
+
+        // Озвучиваем сообщение от бота
+        if (newMessage.text && newMessage.text !== 'start') {
+          textToSpeechAPI(newMessage.text)
+            .then(response => {
+              // Создаем аудио элемент и воспроизводим
+              const audio = new Audio(response.audio_file_url);
+              audio.play().catch(error => {
+                console.error('Ошибка при воспроизведении аудио:', error);
+              });
+            })
+            .catch(error => {
+              console.error('Ошибка при озвучке сообщения:', error);
+            });
+        }
       }
     }
   }, [lastJsonMessage]);
@@ -109,6 +129,64 @@ const ChatWindow: React.FC = () => {
       });
     }
   }, [readyState, sendJsonMessage]);
+
+  // Функция для начала записи
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        try {
+          const recognizedText = await microphoneRunRecognizeAPI(audioBlob);
+          setInputValue(recognizedText);
+          // Автоматически отправляем распознанный текст
+          if (recognizedText.trim()) {
+            const userMessage = {
+              id: Date.now().toString(),
+              text: recognizedText,
+              isUser: true,
+            };
+            setMessages((prev) => [...prev, userMessage]);
+            sendJsonMessage({
+              command: 'send_message',
+              body: {
+                text: recognizedText,
+              },
+            });
+            scrollToBottom();
+          }
+        } catch (error) {
+          console.error('Ошибка при распознавании голоса:', error);
+          message.error('Ошибка при распознавании голоса');
+        }
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Ошибка при доступе к микрофону:', error);
+      message.error('Ошибка при доступе к микрофону');
+    }
+  };
+
+  // Функция для остановки записи
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      setIsRecording(false);
+    }
+  };
 
   // Отправка сообщения
   const sendMessage = () => {
@@ -197,6 +275,13 @@ const ChatWindow: React.FC = () => {
               placeholder="Введите сообщение"
               disabled={isInitialLoading}
               className="input-field"
+            />
+            <Button
+              icon={<AudioOutlined />}
+              onMouseDown={startRecording}
+              onMouseUp={stopRecording}
+              onMouseLeave={stopRecording}
+              className={`microphone-button ${isRecording ? 'recording' : ''}`}
             />
             <Button
               icon={<SendOutlined />}
