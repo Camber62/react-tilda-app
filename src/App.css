@@ -1,0 +1,145 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+.chatContainer {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #CFDAD9;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  align-items: flex-start;
+}
+
+.chatAvatar {
+  flex: 0 0 250px;
+  height: 250px;
+  position: relative;
+  margin-top: 10rem;
+}
+
+.glowingOrb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.chatContent {
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.greeting {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #000;
+  opacity: 0.8;
+}
+
+.botName {
+  color: #74D414;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.buttonList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px 5px 5px; 
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  width: fit-content;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.actionButton:hover {
+  background-color: rgba(46, 204, 113, 0.1);
+  transform: translateX(5px);
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+.inputContainer {
+  background-color: rgba(255, 255, 255, 0.411);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.inputHint {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.bottomButtons {
+  display: flex;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 5px 15px 5px 5px;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.primaryButton:hover {
+  background-color: #74D414;
+  transform: translateY(-2px);
+} 

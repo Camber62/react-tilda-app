@@ -1,5 +1,9 @@
 import axios from "axios";
 
+interface SttResponse {
+    text: string;
+}
+
 export const microphoneRunRecognizeAPI = async (content: Blob) => {
     const audioFile = new File([content], 'audio.webm', {type: "audio/webm"});
     const params = new FormData();
@@ -8,7 +12,7 @@ export const microphoneRunRecognizeAPI = async (content: Blob) => {
     params.append("transcription_needed", "0");
     params.append("audio_file", audioFile);
 
-    const response = await axios.post("https://service.deeptalk.tech/new-stt/api/v1/audio/stt/sync/",
+    const response = await axios.post<SttResponse>("https://service.deeptalk.tech/new-stt/api/v1/audio/stt/sync/",
         params, {
             headers: {
                 'Accept': 'application/json',
