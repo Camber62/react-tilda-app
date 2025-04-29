@@ -2,12 +2,11 @@ import './App.css';
 import ChatWindow from './components/ChatBot/Chat';
 
 function App() {
-
   return (
     <div className="App">
       <div className="chatContainer">
         <div className="chatAvatar">
-          <img src="/Frame 3.png" alt="ChatBot Avatar" className="glowingOrb" />
+          <img src="/images/Frame3.png" alt="ChatBot Avatar" className="glowingOrb" />
         </div>
         <div className="chatContent">
           <h1 className="greeting">
@@ -18,26 +17,26 @@ function App() {
           
           <div className="buttonList">
             <button className="actionButton">
-              <img src="/Group 12.png" alt="Phone" className="icon" />
+              <img src="/images/Group12.png" alt="Phone" className="icon" />
               Запомню ваш контакт для связи
             </button>
             <button className="actionButton">
-              <img src="/Group 9.png" alt="Lightbulb" className="icon" />
+              <img src="/images/Group9.png" alt="Lightbulb" className="icon" />
               Расскажу о продуктах и услугах
             </button>
             <button className="actionButton">
-              <img src="/Group 10.png" alt="Map" className="icon" />
+              <img src="/images/Group10.png" alt="Map" className="icon" />
               Помогу с навигацией
             </button>
           </div>
           <ChatWindow />
           <div className="bottomButtons">
             <button className="primaryButton">
-              <img src="/Group 11.png" alt="Experts" className="icon" />
+              <img src="/images/Group11.png" alt="Experts" className="icon" />
               Связаться с экспертами
             </button>
             <button className="primaryButton">
-              <img src="/Group 8.png" alt="Demo" className="icon" />
+              <img src="/images/Group8.png" alt="Demo" className="icon" />
               Испытать демо
             </button>
           </div>
