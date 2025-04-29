@@ -16,7 +16,11 @@ const Modal: React.FC = () => {
                     <div className="modal-window">
                         <button className="modal-close" onClick={() => setOpen(false)}>&times;</button>
                         <div className="modal-content">
-                            <p>Тут ваш контент модального окна.</p>
+                            <p className="modal-text-center">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo?</p>
+                            <div className="modal-input-row">
+                                <input className="modal-input" type="text" placeholder="Sed ut perspiciatis unde omnis" />
+                                <button className="modal-send-btn">&#8593;</button>
+                            </div>
                         </div>
                     </div>
                 </div>

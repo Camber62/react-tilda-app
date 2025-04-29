@@ -1,12 +1,13 @@
 import React from 'react';
 import ChatWindow from '../ChatBot/Chat';
+import { images } from '../../config/images';
 
 const HomePage: React.FC = () => {
   return (
     <div className="App">
     <div className="chatContainer">
       <div className="chatAvatar">
-        <img src={`${process.env.PUBLIC_URL}/Frame3.png`} alt="ChatBot Avatar" className="glowingOrb" />
+        <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
       </div>
       <div className="chatContent">
         <h1 className="greeting">
@@ -17,26 +18,26 @@ const HomePage: React.FC = () => {
         
         <div className="buttonList">
           <button className="actionButton">
-            <img src={`${process.env.PUBLIC_URL}/Group12.png`} alt="Phone" className="icon" />
+            <img src={images.Group12} alt="Phone" className="icon" />
             Запомню ваш котакт для связи
           </button>
           <button className="actionButton">
-            <img src={`${process.env.PUBLIC_URL}/Group9.png`} alt="Lightbulb" className="icon" />
+            <img src={images.Group9} alt="Lightbulb" className="icon" />
             Расскажу о продуктах и услугах
           </button>
           <button className="actionButton">
-            <img src={`${process.env.PUBLIC_URL}/Group10.png`} alt="Map" className="icon" />
+            <img src={images.Group10} alt="Map" className="icon" />
             Помогу с навигацией
           </button>
         </div>
         <ChatWindow />
         <div className="bottomButtons">
           <button className="primaryButton">
-            <img src={`${process.env.PUBLIC_URL}/Group11.png`} alt="Experts" className="icon" />
+            <img src={images.Group11} alt="Experts" className="icon" />
             Связаться с экспертами
           </button>
           <button className="primaryButton">
-            <img src={`${process.env.PUBLIC_URL}/Group8.png`} alt="Demo" className="icon" />
+            <img src={images.Group8} alt="Demo" className="icon" />
             Испытать демо
           </button>
         </div>
