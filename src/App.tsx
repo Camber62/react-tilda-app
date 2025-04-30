@@ -7,8 +7,15 @@ function App() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
+        console.log('TriggerModalEvent 123 ');
+        document.addEventListener('TriggerModalEvent', (event) => {
+            console.log('TriggerModalEvent', event);
+        });
+    }, []);
+
+    useEffect(() => {
         const button = document.querySelector('a.t-btn.t142__submit[data-tilda-event-name="/tilda/click/rec995174706/button1"]');
-        
+
         if (button) {
             const handleClick = (event: Event) => {
                 event.stopPropagation();
@@ -26,7 +33,7 @@ function App() {
 
     return (
         <>
-            {isOpen && <ChatWidget setIsOpen={setIsOpen}/>}
+            {isOpen && <ChatWidget setIsOpen={setIsOpen} />}
             <HomePage />
         </>
     )
