@@ -1,11 +1,32 @@
+import { useState, useEffect } from 'react';
 import './App.css';
+import ChatWidget from './components/cahat';
 import HomePage from './components/HomePage/HomePage';
-import Modal from './components/Modal/Modal';
 
 function App() {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        const button = document.querySelector('a.t-btn.t142__submit[data-tilda-event-name="/tilda/click/rec995174706/button1"]');
+        
+        if (button) {
+            const handleClick = (event: Event) => {
+                event.stopPropagation();
+                setIsOpen(prev => !prev);
+                console.log('Клик по кнопке: /tilda/click/rec995174706/button1');
+            };
+
+            button.addEventListener('click', handleClick);
+
+            return () => {
+                button.removeEventListener('click', handleClick);
+            };
+        }
+    }, []);
+
     return (
         <>
-            {/* <Modal /> */}
+            {isOpen && <ChatWidget setIsOpen={setIsOpen}/>}
             <HomePage />
         </>
     )
