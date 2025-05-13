@@ -177,18 +177,18 @@ const HomePage: React.FC = () => {
         </div>
         <div className="chatContent">
           <h1 className="greeting">
-          Привет! Я ваш помощник в мире образовательных технологий. Хочу помочь трансформировать учебный процесс. 
+            Привет! Я ваш помощник в мире образовательных<br /> технологий. 
+            Хочу помочь трансформировать <br />учебный процесс.
             <span className="botName">Начнем?</span>
           </h1>
-          <p className="subtitle">Вот что я могу для вас сделать:</p>
           <div className="buttonList">
             <button className="actionButton">
               <img src={images.Group12} alt="Phone" className="icon" />
-              Запомню ваш контакт для связи
+              Расскажу как повысить вовлеченность
             </button>
             <button className="actionButton">
               <img src={images.Group9} alt="Lightbulb" className="icon" />
-              Расскажу о продуктах и услугах
+              Давайте познакомимся
             </button>
             <button className="actionButton">
               <img src={images.Group10} alt="Map" className="icon" />
@@ -213,18 +213,18 @@ const HomePage: React.FC = () => {
                   className={styles.micButton}
                   data-recording={isRecording}
                 >
-                  {isRecording ? '⏹' : '🎤'}
+                  {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
                 </button>
                 <button onClick={handleSend} className={styles.sendButton}>
-                  ➤
+                  <img src={images.Group66} alt="Send" className="icon" />
                 </button>
               </div>
             </div>
           )}
           <div className="bottomButtons">
             <button className="primaryButton">
-              <img src={images.Group8} alt="Demo" className="icon" />
-              Запросить демосессию
+              <img src={images.Vector} alt="Demo" className="icon" />
+              ЗАПРОСИТЬ ДЕМОСЕССИЮ
             </button>
           </div>
         </div>

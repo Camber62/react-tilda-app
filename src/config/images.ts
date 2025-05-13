@@ -5,4 +5,8 @@ export const images = {
   Group10: 'https://Camber62.github.io/react-tilda-app/images/Group10.png',
   Group11: 'https://Camber62.github.io/react-tilda-app/images/Group11.png',
   Group8: 'https://Camber62.github.io/react-tilda-app/images/Group8.png',
+  Group13: 'https://Camber62.github.io/react-tilda-app/images/Group13.png',
+  Group67: 'https://Camber62.github.io/react-tilda-app/images/Group67.png',
+  Group66: 'https://Camber62.github.io/react-tilda-app/images/Group66.png',
+  Vector: 'https://Camber62.github.io/react-tilda-app/images/Vector.png',
 }; 
