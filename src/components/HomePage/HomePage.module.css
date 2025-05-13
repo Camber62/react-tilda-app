@@ -5,6 +5,19 @@
   margin: 32px 0 24px 0;
 }
 
+.customPlaceholder {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #bdbdbd;
+  font-size: 22px;
+  pointer-events: none;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+
 .input {
   width: 100%;
   height: 74px;
@@ -17,10 +30,18 @@
   box-shadow: 0px 2px 10px 1px rgb(209, 209, 209);
 }
 
+.input:not(:placeholder-shown) + .customPlaceholder {
+  display: none;
+}
+
 .input::placeholder {
+  white-space: pre-line;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1.5;
   color: #bdbdbd;
   font-size: 22px;
-  white-space: pre-line;
 }
 
 .input:focus {
@@ -42,7 +63,7 @@
   height: 36px;
   width: 36px;
   min-width: 36px;
-  background: #fff;
+  /* background: #fff; */
   border: none;
   border-radius: 50%;
   box-shadow: none;

@@ -203,7 +203,12 @@ const HomePage: React.FC = () => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 className={styles.input}
-                placeholder="Что Вас интересует сегодня? Давайте я помогу найти нужную информацию!"/>
+                placeholder=" "
+              />
+              <div className={styles.customPlaceholder}>
+                <span>Что Вас интересует сегодня?</span>
+                <span>Давайте я помогу найти нужную информацию!</span>
+              </div>
               <div className={styles.buttonGroup}>
                 <button
                   onMouseDown={handleMicPress}
