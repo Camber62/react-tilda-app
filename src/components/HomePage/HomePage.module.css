@@ -77,9 +77,7 @@
   margin-left: 2px;
 }
 
-.sendButton:hover, .micButton:hover {
-  /* background: #f0f0f0; */
-}
+
 
 .micButton[data-recording="true"] {
   background: #ff4444;

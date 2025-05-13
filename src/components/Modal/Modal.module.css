@@ -1,0 +1,130 @@
+/* --- СТИЛИ ДЛЯ СВЕТЛОГО ЧАТА --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: auto;
+  background-color: transparent;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal-container {
+  background: #fafafa;
+  border-radius: 20px;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e6e6e6;
+  width: 700px;
+  max-height: 492px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #222;
+  font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 20px;
+  background: #fafafa;
+}
+
+.icon-button {
+  border:  none;
+  cursor: pointer;
+  background: #fafafa;
+  color: #BABABA;
+}
+.icon-button:hover {
+  background: #ededed;
+  color: #555;
+}
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Область сообщений */
+.messages-area {
+  flex-grow: 1;
+  padding: 20px 20px 12px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fafafa;
+}
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  max-width: 85%;
+  gap: 8px;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.message-bubble {
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: #f5f5f5;
+  color: #222;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid #ececec;
+  line-height: 1.5;
+}
+.message-bubble p {
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.bot-message {
+  align-self: flex-start;
+}
+.bot-message .message-bubble {
+  border-bottom-left-radius: 6px;
+}
+
+.user-message {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.user-message .message-avatar {
+  order: 1;
+}
+.user-message .message-bubble {
+  order: 2;
+  background: #f0f4ff;
+  color: #222;
+  border-bottom-right-radius: 6px;
+  border: 1px solid #d6e0f5;
+}
+
+/* Кастомизация скроллбара */
+.messages-area::-webkit-scrollbar {
+  width: 8px;
+}
+.messages-area::-webkit-scrollbar-track {
+  background: #fafafa;
+  border-radius: 10px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 10px;
+  border: 2px solid #fafafa;
+}
+.messages-area::-webkit-scrollbar-thumb:hover {
+  background: #cccccc;
+}

@@ -1,0 +1,98 @@
+.inputContainer {
+  position: relative;
+  background: #fafafa;
+  border-radius: 12px;
+  box-shadow: -2px 0px 9px 0px rgb(96 100 104 / 24%);
+  margin: 10px;
+}
+.inputContainerModal {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: -2px 0px 9px 0px rgb(96 100 104 / 24%);
+}
+
+.input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 22px;
+  line-height: 28px;
+  /* color: #8A959E; */
+  background:#D9D9D966;
+  transition: border-color 0.3s ease;
+}
+
+.inputModal {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 22px;
+  line-height: 28px;
+  /* color: #8A959E; */
+  background: #ffffff;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(138, 149, 158, 0.08);
+}
+
+.customPlaceholder {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #c0c7cf;
+  font-size: 18px;
+  line-height: 22px;
+  transition: opacity 0.3s ease;
+  white-space: pre-line;
+}
+
+.input:focus + .customPlaceholder,
+.input:not(:placeholder-shown) + .customPlaceholder {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.buttonGroup {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+}
+
+.micButton,
+.sendButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.micButton:hover,
+.sendButton:hover {
+  opacity: 0.8;
+}
+
+.micButton[data-recording="true"] {
+  color: #ff3b30;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}

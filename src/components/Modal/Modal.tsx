@@ -1,12 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './Modal.css';
+import React, { useEffect, useRef } from 'react';
+import { Message } from '../../types/chat';
 import LoadingDots from '../LoadingDots/LoadingDots';
-
-interface Message {
-  text: string;
-  isUser: boolean;
-  id?: string;
-}
+import ChatInput from '../ChatInput/ChatInput';
+import styles from './Modal.module.css';
+import { images } from '../../config/images';
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,100 +13,71 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoading = false }) => {
-  const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle sending message
-  const handleSend = () => {
-    if (!inputText.trim()) return;
-    onSendMessage(inputText);
-    setInputText('');
-  };
-
-  // Handle Enter key press
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleSend();
-  };
-
   const showLoadingDots = isLoading && messages.length > 0 && messages[messages.length - 1].isUser;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <div className="modal-header">
+    <div className={styles['modal-overlay']}>
+      <div className={styles['modal-container']}>
+        <div className={styles['modal-header']}>
           <button
             onClick={() => setOpen(false)}
-            className="icon-button close-button"
+            className={`${styles['icon-button']} ${styles['close-button']}`}
             aria-label="Close chat"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
+              <path
+                d="M18 6L6 18M6 6L18 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>
-        <div className="messages-area">
+        <div className={styles['messages-area']}>
           {messages.map((msg) => (
             <div
               key={msg.id || msg.text + Math.random()}
-              className={`message ${msg.isUser ? 'user-message' : 'bot-message'}`}
+              className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
             >
-              <div className="message-bubble">
+              <img 
+                src={msg.isUser ? images.Frame4 : images.Frame3} 
+                alt={msg.isUser ? "User avatar" : "Bot avatar"}
+                className={styles['message-avatar']}
+              />
+              <div className={styles['message-bubble']}>
                 <p>{msg.text}</p>
               </div>
             </div>
           ))}
           {showLoadingDots && (
-            <div className="message bot-message">
+            <div className={`${styles.message} ${styles['bot-message']}`}>
               <LoadingDots />
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
-        <div className="input-area">
-          <input
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ваш вопрос"
-          />
-          <button
-            onClick={handleSend}
-            className="icon-button send-button"
-            aria-label="Send message"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </div>
+        <ChatInput
+          visualMode={false}
+          onSendMessage={onSendMessage}
+          placeholder="Ваш вопрос"
+          onError={setError}
+        />
       </div>
     </div>
   );

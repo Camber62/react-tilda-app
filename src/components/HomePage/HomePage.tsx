@@ -1,29 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useAudioRecorder } from 'react-audio-voice-recorder';
 import useWebSocket from 'react-use-websocket';
 import API from '../../api';
 import { images } from '../../config/images';
 import Modal from '../Modal/Modal';
 import { AudioPlayer } from '../../AudioPlayer';
 import styles from './HomePage.module.css';
-import { AudioPreview } from './AudioPreview';
-
-// Интерфейсы
-interface Message {
-  text: string;
-  isUser: boolean;
-  id?: string;
-}
-
-interface WebSocketMessage {
-  command: string;
-  body: {
-    message_id?: string;
-    message?: { content: { text: string } };
-    text?: string;
-    status?: string;
-  };
-}
+import { Message, WebSocketMessage } from '../../types/chat';
+import ChatInput from '../ChatInput/ChatInput';
+import { useAudioRecording } from '../../hooks/useAudioRecording';
 
 const WS_URL_PREFIX = 'wss://api-ai.deeptalk.tech/chat-server-ws/ws/';
 const WebSocketStatus = {
@@ -42,15 +26,6 @@ const HomePage: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const processedMessageIds = useRef<Set<string>>(new Set());
-  const { startRecording, stopRecording, recordingBlob, isRecording } = useAudioRecorder();
-  const [isAudioReady, setIsAudioReady] = useState(false);
-  const [pendingAudio, setPendingAudio] = useState<Blob | null>(null);
-
-  useEffect(() => {
-    document.addEventListener('TriggerModalEvent', (event) => {
-      setOpenModal(true);
-    });
-  }, []);
 
   // WebSocket
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket<WebSocketMessage>(
@@ -63,6 +38,42 @@ const HomePage: React.FC = () => {
     },
     !!socketUrl
   );
+
+  // Отправка сообщения
+  const sendMessage = useCallback(
+    (text: string) => {
+      if (!text.trim() || readyState !== WebSocketStatus.OPEN) return;
+
+      const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
+      setMessages((prev) => [...prev, userMessage]);
+      setOpenModal(true);
+
+      sendJsonMessage({
+        command: 'send_message',
+        body: { text },
+      });
+    },
+    [sendJsonMessage, readyState]
+  );
+
+  const {
+    isRecording,
+    isAudioReady,
+    pendingAudio,
+    handleMicPress,
+    handleMicRelease,
+    handleAudioCancel,
+    handleAudioConfirm
+  } = useAudioRecording({
+    onAudioRecognized: sendMessage,
+    onError: setError
+  });
+
+  useEffect(() => {
+    document.addEventListener('TriggerModalEvent', (event) => {
+      setOpenModal(true);
+    });
+  }, []);
 
   // Инициализация чата
   useEffect(() => {
@@ -114,39 +125,6 @@ const HomePage: React.FC = () => {
     }
   }, [lastJsonMessage]);
 
-  // Отправка сообщения
-  const sendMessage = useCallback(
-    (text: string) => {
-      if (!text.trim() || readyState !== WebSocketStatus.OPEN) return;
-
-      const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
-      setMessages((prev) => [...prev, userMessage]);
-      setOpenModal(true);
-
-      sendJsonMessage({
-        command: 'send_message',
-        body: { text },
-      });
-    },
-    [sendJsonMessage, readyState]
-  );
-
-  // Обработка микрофона
-  const handleMicPress = useCallback(() => {
-    if (!isRecording) startRecording();
-  }, [isRecording, startRecording]);
-
-  const handleMicRelease = useCallback(() => {
-    if (isRecording) stopRecording();
-  }, [isRecording, stopRecording]);
-
-  // Обработка записанного аудио
-  useEffect(() => {
-    if (!recordingBlob || isRecording) return;
-    setPendingAudio(recordingBlob);
-    setIsAudioReady(true);
-  }, [recordingBlob, isRecording]);
-
   // Обработка отправки текстового сообщения
   const handleSend = useCallback(() => {
     if (!inputMessage.trim()) return;
@@ -192,58 +170,15 @@ const HomePage: React.FC = () => {
             </button>
           </div>
           <div className={styles.inputContainer}>
-          {!openModal && (
-            isAudioReady && pendingAudio ? (
-              <AudioPreview
-                audioBlob={pendingAudio}
-                onCancel={() => {
-                  setPendingAudio(null);
-                  setIsAudioReady(false);
-                }}
-                onConfirm={async () => {
-                  try {
-                    const recognizedText = await API.microphoneRunRecognizeAPI(pendingAudio);
-                    sendMessage(recognizedText);
-                  } catch (err: any) {
-                    setError(err.message || 'Не удалось распознать голос');
-                  } finally {
-                    setPendingAudio(null);
-                    setIsAudioReady(false);
-                  }
-                }}
+            {!openModal && (
+              <ChatInput
+                visualMode={true}
+                onSendMessage={sendMessage}
+                placeholder={`Что Вас интересует сегодня?\nДавайте я помогу найти нужную информацию!`}
+                onError={setError}
               />
-            ) : (
-              <div>
-                <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  className={styles.input}
-                  placeholder=" "
-                />
-                <div className={styles.customPlaceholder}>
-                  <span>Что Вас интересует сегодня?</span>
-                  <span>Давайте я помогу найти нужную информацию!</span>
-                </div>
-                <div className={styles.buttonGroup}>
-                  <button
-                    onMouseDown={handleMicPress}
-                    onMouseUp={handleMicRelease}
-                    onMouseLeave={handleMicRelease}
-                    className={styles.micButton}
-                    data-recording={isRecording}
-                  >
-                    {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
-                  </button>
-                  <button onClick={handleSend} className={styles.sendButton}>
-                    <img src={images.Group66} alt="Send" className="icon" />
-                  </button>
-                </div>
-              </div>
-            )
-          )}
-              </div>
+            )}
+          </div>
           <div className="bottomButtons">
             <button className="primaryButton">
               <img src={images.Vector} alt="Demo" className="icon" />
