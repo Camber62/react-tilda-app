@@ -177,7 +177,7 @@ const HomePage: React.FC = () => {
         </div>
         <div className="chatContent">
           <h1 className="greeting">
-            Привет! Я ваш помощник в мире образовательных<br /> технологий. 
+            Привет! Я ваш помощник в мире образовательных<br /> технологий.
             Хочу помочь трансформировать <br />учебный процесс.
             <span className="botName">Начнем?</span>
           </h1>
@@ -203,8 +203,7 @@ const HomePage: React.FC = () => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 className={styles.input}
-                placeholder="Введите сообщение..."
-              />
+                placeholder="Что Вас интересует сегодня? Давайте я помогу найти нужную информацию!"/>
               <div className={styles.buttonGroup}>
                 <button
                   onMouseDown={handleMicPress}
