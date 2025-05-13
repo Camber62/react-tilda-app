@@ -22,10 +22,10 @@ button {
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  background-color: #CFDAD9;
+  /* background-color: #CFDAD9; */
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   align-items: flex-start;
 }
 

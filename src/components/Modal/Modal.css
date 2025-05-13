@@ -1,105 +1,183 @@
-.modal-fab {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 9999;
-  background: #222;
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: background 0.2s;
-}
-
-.modal-fab:hover {
-  background: #74D414;
-}
-
+/* --- СТИЛИ ДЛЯ СВЕТЛОГО ЧАТА --- */
 .modal-overlay {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.2);
-  z-index: 10000;
+  left: auto;
+  right: 0;
+  bottom: auto;
+  background-color: transparent;
   display: flex;
-  justify-content: flex-end;
   align-items: flex-start;
+  justify-content: flex-end;
+  z-index: 1000;
+  padding: 24px;
 }
 
-.modal-window {
-  margin: 32px 32px 0 0;
+.modal-container {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-  min-width: 340px;
-  max-width: 30vw;
-  padding: 32px 24px 24px 24px;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #888;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.modal-close:hover {
-  color: #222;
-}
-
-.modal-content {
-  margin-top: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+  border: 1px solid #E6E6E6;
+  width: 100%;
+  max-width: 700px;
+  max-height: 492px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  overflow: hidden;
+  color: #222;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }
 
-.modal-text-center {
-  text-align: center;
-  margin-bottom: 24px;
-  color: #444;
-  font-size: 1.1rem;
-}
-
-.modal-input-row {
+.modal-header {
   display: flex;
-  width: 100%;
-  max-width: 420px;
-  margin-top: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #F0F0F0;
+  background: #fff;
 }
 
-.modal-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid #d0d0d0;
-  border-radius: 24px 0 0 24px;
-  font-size: 1rem;
-  outline: none;
-  background: #f7f7f7;
-}
-
-.modal-send-btn {
-  background: #74D414;
-  color: #fff;
-  border: none;
-  border-radius: 0 24px 24px 0;
-  padding: 0 22px;
-  font-size: 1.3rem;
+.icon-button {
+  background: #F5F5F5;
+  border: 1px solid #E6E6E6;
+  color: #A0A0A0;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.2s;
 }
+.icon-button:hover {
+  background: #EDEDED;
+  color: #555;
+}
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+}
 
-.modal-send-btn:hover {
-  background: #5bb10f;
+/* Область сообщений */
+.messages-area {
+  flex-grow: 1;
+  padding: 20px 20px 12px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #FAFAFA;
+}
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  max-width: 85%;
+}
+
+.message-bubble {
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: #F5F5F5;
+  color: #222;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+  border: 1px solid #ECECEC;
+  line-height: 1.5;
+}
+.message-bubble p {
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.bot-message {
+  align-self: flex-start;
+}
+.bot-message .message-bubble {
+  border-bottom-left-radius: 6px;
+}
+.bot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #E8F5E9;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px 0 rgba(76,175,80,0.10);
+}
+
+.user-message {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.user-message .message-bubble {
+  background: #F0F4FF;
+  color: #222;
+  border-bottom-right-radius: 6px;
+  border: 1px solid #D6E0F5;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #F0F0F0;
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06);
+}
+.user-avatar svg path {
+  fill: #BDBDBD;
+}
+
+.input-area {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid #F0F0F0;
+  background: #fff;
+}
+.input-area input[type="text"] {
+  flex-grow: 1;
+  background: #F5F5F5;
+  border: 1px solid #E6E6E6;
+  border-radius: 20px;
+  padding: 12px 18px;
+  color: #222;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+.input-area input[type="text"]:focus {
+  border: 1.5px solid #B3B3B3;
+}
+.input-area input[type="text"]::placeholder {
+  color: #BDBDBD;
+}
+.input-area .icon-button {
+  margin-left: 10px;
+}
+.voice-button, .send-button {
+  background: #F5F5F5;
+  border: 1px solid #E6E6E6;
+  color: #A0A0A0;
+}
+
+/* Кастомизация скроллбара */
+.messages-area::-webkit-scrollbar {
+  width: 8px;
+}
+.messages-area::-webkit-scrollbar-track {
+  background: #FAFAFA;
+  border-radius: 10px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+  background: #E0E0E0;
+  border-radius: 10px;
+  border: 2px solid #FAFAFA;
+}
+.messages-area::-webkit-scrollbar-thumb:hover {
+  background: #CCCCCC;
 }
