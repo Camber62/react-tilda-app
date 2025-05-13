@@ -177,8 +177,8 @@ const HomePage: React.FC = () => {
         </div>
         <div className="chatContent">
           <h1 className="greeting">
-            Привет! Я — ваш виртуальный помощник,<br />
-            <span className="botName">ChatBot</span>, и я здесь, чтобы помочь вам.
+          Привет! Я ваш помощник в мире образовательных технологий. Хочу помочь трансформировать учебный процесс. 
+            <span className="botName">Начнем?</span>
           </h1>
           <p className="subtitle">Вот что я могу для вас сделать:</p>
           <div className="buttonList">
