@@ -6,6 +6,7 @@ import { images } from '../../config/images';
 import Modal from '../Modal/Modal';
 import { AudioPlayer } from '../../AudioPlayer';
 import styles from './HomePage.module.css';
+import { AudioPreview } from './AudioPreview';
 
 // Интерфейсы
 interface Message {
@@ -42,6 +43,8 @@ const HomePage: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const processedMessageIds = useRef<Set<string>>(new Set());
   const { startRecording, stopRecording, recordingBlob, isRecording } = useAudioRecorder();
+  const [isAudioReady, setIsAudioReady] = useState(false);
+  const [pendingAudio, setPendingAudio] = useState<Blob | null>(null);
 
   useEffect(() => {
     document.addEventListener('TriggerModalEvent', (event) => {
@@ -139,17 +142,10 @@ const HomePage: React.FC = () => {
 
   // Обработка записанного аудио
   useEffect(() => {
-    const recognizeAndSend = async () => {
-      if (!recordingBlob || isRecording) return;
-      try {
-        const recognizedText = await API.microphoneRunRecognizeAPI(recordingBlob);
-        sendMessage(recognizedText);
-      } catch (err: any) {
-        setError(err.message || 'Не удалось распознать голос');
-      }
-    };
-    recognizeAndSend();
-  }, [recordingBlob, isRecording, sendMessage]);
+    if (!recordingBlob || isRecording) return;
+    setPendingAudio(recordingBlob);
+    setIsAudioReady(true);
+  }, [recordingBlob, isRecording]);
 
   // Обработка отправки текстового сообщения
   const handleSend = useCallback(() => {
@@ -195,36 +191,59 @@ const HomePage: React.FC = () => {
               Помогу с навигацией
             </button>
           </div>
+          <div className={styles.inputContainer}>
           {!openModal && (
-            <div className={styles.inputContainer}>
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className={styles.input}
-                placeholder=" "
+            isAudioReady && pendingAudio ? (
+              <AudioPreview
+                audioBlob={pendingAudio}
+                onCancel={() => {
+                  setPendingAudio(null);
+                  setIsAudioReady(false);
+                }}
+                onConfirm={async () => {
+                  try {
+                    const recognizedText = await API.microphoneRunRecognizeAPI(pendingAudio);
+                    sendMessage(recognizedText);
+                  } catch (err: any) {
+                    setError(err.message || 'Не удалось распознать голос');
+                  } finally {
+                    setPendingAudio(null);
+                    setIsAudioReady(false);
+                  }
+                }}
               />
-              <div className={styles.customPlaceholder}>
-                <span>Что Вас интересует сегодня?</span>
-                <span>Давайте я помогу найти нужную информацию!</span>
+            ) : (
+              <div>
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  className={styles.input}
+                  placeholder=" "
+                />
+                <div className={styles.customPlaceholder}>
+                  <span>Что Вас интересует сегодня?</span>
+                  <span>Давайте я помогу найти нужную информацию!</span>
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button
+                    onMouseDown={handleMicPress}
+                    onMouseUp={handleMicRelease}
+                    onMouseLeave={handleMicRelease}
+                    className={styles.micButton}
+                    data-recording={isRecording}
+                  >
+                    {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
+                  </button>
+                  <button onClick={handleSend} className={styles.sendButton}>
+                    <img src={images.Group66} alt="Send" className="icon" />
+                  </button>
+                </div>
               </div>
-              <div className={styles.buttonGroup}>
-                <button
-                  onMouseDown={handleMicPress}
-                  onMouseUp={handleMicRelease}
-                  onMouseLeave={handleMicRelease}
-                  className={styles.micButton}
-                  data-recording={isRecording}
-                >
-                  {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
-                </button>
-                <button onClick={handleSend} className={styles.sendButton}>
-                  <img src={images.Group66} alt="Send" className="icon" />
-                </button>
-              </div>
-            </div>
+            )
           )}
+              </div>
           <div className="bottomButtons">
             <button className="primaryButton">
               <img src={images.Vector} alt="Demo" className="icon" />
