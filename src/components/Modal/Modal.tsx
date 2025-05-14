@@ -16,6 +16,14 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoading = false, closeChat }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [showHistory, setShowHistory] = React.useState(false);
+  const [history] = React.useState([
+    { text: 'Краткий контекст прошлого запроса', date: '2мин' },
+    { text: 'Краткий контекст прошлого запроса', date: '27мин' },
+    { text: 'Краткий контекст прошлого запроса', date: '3дня' },
+    { text: 'Краткий контекст прошлого запроса', date: '31янв' },
+    { text: 'Краткий контекст прошлого запроса', date: '31янв' },
+  ]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -24,11 +32,21 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
 
   const showLoadingDots = isLoading && messages.length > 0 && messages[messages.length - 1].isUser;
 
+  const handleHistoryClick = (item: { text: string; date: string }) => {
+    onSendMessage(item.text);
+    setShowHistory(false);
+  };
+
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
         <div className={styles['modal-header']}>
-          <img src={images.History} alt="History" className={styles['history-icon']} />
+          <button
+            onClick={() => setShowHistory((prev) => !prev)}
+            className={styles['history-icon']}
+          >
+            <img src={images.History} alt="History" />
+          </button>
           <button
             onClick={closeChat}
             className={`${styles['icon-button']} ${styles['close-button']}`}
@@ -74,6 +92,25 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
           )}
           <div ref={messagesEndRef} />
         </div>
+        {showHistory && (
+          <div className={styles['history-list']}>
+            {history.map((item, idx) => (
+              <div
+                key={idx}
+                className={styles['history-item']}
+                onClick={() => handleHistoryClick(item)}
+              >
+                <span>{item.text}</span>
+                <span className={styles['history-date']}>{item.date}</span>
+                <span className={styles['history-arrow']}>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 5L12 10L7 15" stroke="#6FCF97" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
         <ChatInput
           visualMode={false}
           onSendMessage={onSendMessage}

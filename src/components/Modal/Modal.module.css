@@ -128,3 +128,64 @@
 .messages-area::-webkit-scrollbar-thumb:hover {
   background: #cccccc;
 }
+
+/* --- ИСТОРИЯ ЗАПРОСОВ --- */
+.history-list {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  margin: 0 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.10);
+  border: 1px solid #e6e6e6;
+  z-index: 1100;
+  padding: 8px 0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f0f0f0;
+}
+.history-item:last-child {
+  border-bottom: none;
+}
+.history-item:hover {
+  background: #f7f7f7;
+}
+
+.history-item span:first-child {
+  flex: 1 1 auto;
+  font-size: 16px;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-date {
+  margin-left: 16px;
+  font-size: 13px;
+  color: #bdbdbd;
+  min-width: 40px;
+  text-align: right;
+}
+
+.history-arrow {
+  margin-left: 18px;
+  display: flex;
+  align-items: center;
+}
+.history-arrow svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}

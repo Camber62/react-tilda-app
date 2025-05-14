@@ -133,10 +133,10 @@ const HomePage: React.FC = () => {
       processedMessageIds.current.add(body.message_id);
 
       // Обновляем JSON данные, если они есть в сообщении
-      // if (body.message?.content?.text) {
-      //   const jsonData = JSON.parse(body.message.content.text) as ChatJsonData;
-      //   setChatJsonData(jsonData);
-      // }
+      if (chatType === ChatType.CUSTOMER_SURVEY && body.message?.content?.text) {
+        const jsonData = JSON.parse(body.message.content.text) as ChatJsonData;
+        setChatJsonData(jsonData);
+      }
 
       const newMessage: Message = {
         id: body.message_id,
@@ -226,7 +226,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
-      {openModal && (
+      {!openModal && (
         <Modal
           setOpen={setOpenModal}
           messages={messages}
