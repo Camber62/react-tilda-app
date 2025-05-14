@@ -1,3 +1,5 @@
+import { ChatType } from '../api/initChat';
+
 export interface Message {
   text: string;
   isUser: boolean;
@@ -46,4 +48,24 @@ export interface ChatJsonData {
   step_9: {
     missing_features: string | null;
   };
+}
+
+export interface ChatHistoryMessage {
+  id: string;
+  text: string;
+  timestamp: number;
+  type: ChatType;
+}
+
+export interface ChatHistoryItem {
+  id: string;
+  type: ChatType;
+  timestamp: number;
+  firstMessage: string;
+  messages: Message[];
+}
+
+export interface ChatHistoryStorage {
+  messages: ChatHistoryMessage[];
+  lastUpdated: number;
 }

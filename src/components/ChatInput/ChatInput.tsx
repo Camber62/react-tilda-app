@@ -9,9 +9,10 @@ interface ChatInputProps {
   placeholder?: string;
   onError?: (error: string | null) => void;
   visualMode: boolean;
+  disabled?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeholder,onError }) => {
+const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeholder, onError, disabled = false }) => {
   const [inputText, setInputText] = useState('');
   const [isRecognizing, setIsRecognizing] = useState(false);
 
@@ -71,6 +72,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
         onKeyDown={handleKeyPress}
         className={styles.inputModal}
         placeholder=" "
+        disabled={disabled}
       />
       <div className={styles.customPlaceholder}>
         <span>{placeholder}</span>
@@ -82,10 +84,11 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
           onMouseLeave={handleMicRelease}
           className={styles.micButton}
           data-recording={isRecording}
+          disabled={disabled}
         >
           {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
         </button>
-        <button onClick={handleSend} className={styles.sendButton}>
+        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
           <img src={images.Group66} alt="Send" className="icon" />
         </button>
       </div>
@@ -99,6 +102,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
         onKeyDown={handleKeyPress}
         className={styles.input}
         placeholder=" "
+        disabled={disabled}
       />
       <div className={styles.customPlaceholder}>
         <span>{placeholder}</span>
@@ -110,10 +114,11 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
           onMouseLeave={handleMicRelease}
           className={styles.micButton}
           data-recording={isRecording}
+          disabled={disabled}
         >
           {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
         </button>
-        <button onClick={handleSend} className={styles.sendButton}>
+        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
           <img src={images.Group66} alt="Send" className="icon" />
         </button>
       </div>

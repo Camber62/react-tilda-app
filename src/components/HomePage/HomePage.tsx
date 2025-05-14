@@ -4,17 +4,14 @@ import API from '../../api';
 import { ChatType } from '../../api/initChat';
 import { AudioPlayer } from '../../AudioPlayer';
 import { images } from '../../config/images';
-import { ChatJsonData, Message, WebSocketMessage } from '../../types/chat';
+import { storageService } from '../../services/storage';
+import { ChatHistoryItem, ChatJsonData, Message, WebSocketMessage } from '../../types/chat';
 import ChatInput from '../ChatInput/ChatInput';
 import Modal from '../Modal/Modal';
 import styles from './HomePage.module.css';
 
 const WS_URL_PREFIX = 'wss://api-ai.deeptalk.tech/chat-server-ws/ws/';
-const WebSocketStatus = {
-  OPEN: 1,
-};
-
-
+const WebSocketStatus = { OPEN: 1, };
 
 const HomePage: React.FC = () => {
   // Состояния
@@ -27,14 +24,22 @@ const HomePage: React.FC = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const processedMessageIds = useRef<Set<string>>(new Set());
-  const [chatJsonData, setChatJsonData] = useState<ChatJsonData | null>(null);
+  const [userInfo, setUserInfo] = useState<ChatJsonData | null>(null);
   const [isChatInitialized, setIsChatInitialized] = useState(false);
   const [chatType, setChatType] = useState<ChatType>(ChatType.CUSTOMER_SURVEY);
-  const [chatHistory, setChatHistory] = useState<[]>([]);
 
+  // useEffect(() => {
+  //   console.log(userInfo); 
+  // }, [userInfo]);
+
+  // Загрузка сохраненной информации о пользователе при монтировании компонента
   useEffect(() => {
-    console.log(chatJsonData);
-  }, [chatJsonData]);
+    const savedUserInfo = storageService.getUserInfo();
+    if (savedUserInfo) {
+      setUserInfo(savedUserInfo);
+    }
+  }, []);
+
 
   // WebSocket
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket<WebSocketMessage>(
@@ -42,12 +47,12 @@ const HomePage: React.FC = () => {
     {
       onOpen: () => {
         console.log('WebSocket соединение установлено');
-        if (chatType === ChatType.CUSTOMER_SURVEY) {
-          sendJsonMessage({
-            command: 'send_message',
-            body: { text: 'start' },
-          });
-        }
+        // if (chatType === ChatType.CUSTOMER_SURVEY) {
+        //   sendJsonMessage({
+        //     command: 'send_message',
+        //     body: { text: 'start' },
+        //   });
+        // }
       },
       shouldReconnect: () => true,
       reconnectAttempts: 3,
@@ -55,6 +60,16 @@ const HomePage: React.FC = () => {
     },
     !!socketUrl
   );
+
+  // Проверка на открытое соединение
+  const isConnectionOpen = readyState === WebSocketStatus.OPEN;
+
+  // Открытие чата по id
+  const openChatHistory = useCallback((chatId: string, message: Message[]) => {
+    setChatId(chatId);
+    setSocketUrl(`${WS_URL_PREFIX}${chatId}`);
+    setMessages(message);
+  }, []);
 
   // Отправка сообщения
   const sendMessage = useCallback((text: string) => {
@@ -65,15 +80,15 @@ const HomePage: React.FC = () => {
     if (!text.trim()) return;
 
     const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
 
     sendJsonMessage({
       command: 'send_message',
       body: { text },
     });
-  },
-    [sendJsonMessage, readyState]
-  );
+
+  }, [sendJsonMessage, readyState, messages]);
 
 
   // Открытие модального окна
@@ -94,7 +109,6 @@ const HomePage: React.FC = () => {
   }, []);
 
 
-
   // Обработчик клика для инициализации чата
   const handleStartChat = async (chatType: ChatType) => {
     setChatType(chatType);
@@ -103,7 +117,8 @@ const HomePage: React.FC = () => {
     setIsLoading(true);
     try {
       setError(null);
-      const chatResponse = await API.initChat(chatType);
+      const userInfoData = userInfo || {};
+      const chatResponse = await API.initChat(chatType, JSON.stringify(userInfoData));
       setChatId(chatResponse.id);
       setIsChatInitialized(true);
     } catch (err: any) {
@@ -135,7 +150,9 @@ const HomePage: React.FC = () => {
       // Обновляем JSON данные, если они есть в сообщении
       if (chatType === ChatType.CUSTOMER_SURVEY && body.message?.content?.text) {
         const jsonData = JSON.parse(body.message.content.text) as ChatJsonData;
-        setChatJsonData(jsonData);
+        setUserInfo(jsonData);
+        storageService.saveUserInfo(jsonData);
+
       }
 
       const newMessage: Message = {
@@ -146,7 +163,25 @@ const HomePage: React.FC = () => {
         isUser: false,
       };
 
-      setMessages((prev) => [...prev, newMessage]);
+      setMessages((prev) => {
+        const updatedMessages = [...prev, newMessage];
+
+        // Сохраняем чат в localStorage при любом изменении сообщений
+        if (chatId) {
+          const firstUserMessage = updatedMessages.find(msg => msg.isUser)?.text || '';
+          const chatData: ChatHistoryItem = {
+            id: chatId,
+            type: chatType,
+            timestamp: Date.now(),
+            firstMessage: firstUserMessage,
+            messages: updatedMessages
+          };
+          storageService.saveChat(chatData);
+        }
+
+        return updatedMessages;
+      });
+
       setIsLoading(false);
 
       if (newMessage.text && newMessage.text !== 'start') {
@@ -160,6 +195,8 @@ const HomePage: React.FC = () => {
     }
   }, [lastJsonMessage]);
 
+
+
   // Закрытие чата
   const closeChat = useCallback(() => {
     // Закрываем WebSocket соединение
@@ -171,7 +208,7 @@ const HomePage: React.FC = () => {
     setChatId('');
     setError(null);
     setIsChatInitialized(false);
-    setChatJsonData(null);
+    setUserInfo(null);
     setCurrentAudioMessage('');
     setIsAudioPlaying(false);
     setOpenModal(false);
@@ -198,7 +235,6 @@ const HomePage: React.FC = () => {
             <button
               className="actionButton"
               onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
-              // disabled={isLoading || isChatInitialized}
             >
               <img src={images.Group9} alt="Lightbulb" className="icon" />
               Давайте познакомимся
@@ -226,13 +262,15 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
-      {!openModal && (
+      {openModal && (
         <Modal
           setOpen={setOpenModal}
           messages={messages}
           onSendMessage={sendMessage}
           isLoading={isLoading}
           closeChat={closeChat}
+          openChatById={openChatHistory}
+          isConnectionOpen={isConnectionOpen}
         />
       )}
       {currentAudioMessage && (

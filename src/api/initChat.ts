@@ -17,15 +17,13 @@ const CHAT_ENDPOINTS = {
   [ChatType.MAIN_CHAT]: '/api/v1/chats/landing/main_chat/ru/'
 };
 
-export const initChat = async (chatType: ChatType = ChatType.CUSTOMER_SURVEY): Promise<ChatInitResponse> => {
+export const initChat = async (chatType: ChatType, userInfo: string): Promise<ChatInitResponse> => {
   try {
     const endpoint = CHAT_ENDPOINTS[chatType];
     const baseUrl = 'https://api-ai.deeptalk.tech/core-ai';
-    const userInfo = {
-      "user_info": "Ярополк"
-    }
 
-    const response = await axios.post<ChatInitResponse>(`${baseUrl}${endpoint}`, userInfo);
+
+    const response = await axios.post<ChatInitResponse>(`${baseUrl}${endpoint}`, { user_info: userInfo },);
 
     return response.data;
   } catch (error) {
