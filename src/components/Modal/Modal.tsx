@@ -20,10 +20,7 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
 
   const [history] = React.useState([
     { text: 'Краткий контекст прошлого запроса', date: '2мин' },
-    { text: 'Краткий контекст прошлого запроса', date: '27мин' },
-    { text: 'Краткий контекст прошлого запроса', date: '3дня' },
-    { text: 'Краткий контекст прошлого запроса', date: '31янв' },
-    { text: 'Краткий контекст прошлого запроса', date: '31янв' },
+
   ]);
 
   // Scroll to bottom when messages change

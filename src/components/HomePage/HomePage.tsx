@@ -30,7 +30,7 @@ const HomePage: React.FC = () => {
   const [chatJsonData, setChatJsonData] = useState<ChatJsonData | null>(null);
   const [isChatInitialized, setIsChatInitialized] = useState(false);
   const [chatType, setChatType] = useState<ChatType>(ChatType.CUSTOMER_SURVEY);
-
+  const [chatHistory, setChatHistory] = useState<[]>([]);
 
   useEffect(() => {
     console.log(chatJsonData);

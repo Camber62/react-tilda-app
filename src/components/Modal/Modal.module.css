@@ -40,10 +40,10 @@
   cursor: pointer;
 }
 
-.icon-button:hover {
+/* .icon-button:hover {
   background: #ededed;
   color: #555;
-}
+} */
 .icon-button svg {
   width: 20px;
   height: 20px;
