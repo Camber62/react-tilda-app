@@ -17,6 +17,7 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = React.useState(false);
+
   const [history] = React.useState([
     { text: 'Краткий контекст прошлого запроса', date: '2мин' },
     { text: 'Краткий контекст прошлого запроса', date: '27мин' },
@@ -40,60 +41,71 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
   return (
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
-        <div className={styles['modal-header']}>
-          <button
-            onClick={() => setShowHistory((prev) => !prev)}
-            className={styles['history-icon']}
-          >
-            <img src={images.History} alt="History" />
-          </button>
+        <div className={styles['modal-header']} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            {showHistory ? (
+              <button
+                onClick={() => setShowHistory(false)}
+                className={styles['icon-button']}
+                aria-label="Назад к чату"
+                style={{ marginRight: 8 }}
+              >
+                назад
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowHistory((prev) => !prev)}
+                className={styles['icon-button']}
+              >
+                <img src={images.History} alt="History" />
+              </button>
+            )}
+          </div>
+          <div />
           <button
             onClick={closeChat}
             className={`${styles['icon-button']} ${styles['close-button']}`}
             aria-label="Close chat"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M18 6L6 18M6 6L18 18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <img src={images.Close} alt="Close" />
           </button>
         </div>
-        <div className={styles['messages-area']}>
-          {messages.map((msg) => (
-            <div
-              key={msg.id || msg.text + Math.random()}
-              className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
-            >
-              <img 
-                src={msg.isUser ? images.Frame4 : images.Frame3} 
-                alt={msg.isUser ? "User avatar" : "Bot avatar"}
-                className={styles['message-avatar']}
-              />
-              <div className={styles['message-bubble']}>
-                <p>{msg.text}</p>
-              </div>
+        {!showHistory && (
+          <>
+            <div className={styles['messages-area']}>
+              {messages.map((msg) => (
+                <div
+                  key={msg.id || msg.text + Math.random()}
+                  className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
+                >
+                  <img
+                    src={msg.isUser ? images.Frame4 : images.Frame3}
+                    alt={msg.isUser ? "User avatar" : "Bot avatar"}
+                    className={styles['message-avatar']}
+                  />
+                  <div className={styles['message-bubble']}>
+                    <p>{msg.text}</p>
+                  </div>
+                </div>
+              ))}
+              {showLoadingDots && (
+                <div className={`${styles.message} ${styles['bot-message']}`}>
+                  <LoadingDots />
+                </div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          ))}
-          {showLoadingDots && (
-            <div className={`${styles.message} ${styles['bot-message']}`}>
-              <LoadingDots />
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+            <ChatInput
+              visualMode={false}
+              onSendMessage={onSendMessage}
+              placeholder="Ваш вопрос"
+              onError={setError}
+            />
+          </>
+        )}
         {showHistory && (
-          <div className={styles['history-list']}>
+          <div className={styles['history-list']} style={{ position: 'relative', margin: 0, top: 0, left: 0, right: 0, boxShadow: 'none', border: 'none', borderRadius: 0, maxHeight: 'none', height: '100%', minHeight: 320 }}>
+            <div style={{ height: '1px', background: '#f0f0f0', margin: '0 0 8px 0' }} />
             {history.map((item, idx) => (
               <div
                 key={idx}
@@ -103,20 +115,12 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
                 <span>{item.text}</span>
                 <span className={styles['history-date']}>{item.date}</span>
                 <span className={styles['history-arrow']}>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 5L12 10L7 15" stroke="#6FCF97" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <img src={images.Vector6} alt="arrow" style={{ width: 24, height: 24 }} />
                 </span>
               </div>
             ))}
           </div>
         )}
-        <ChatInput
-          visualMode={false}
-          onSendMessage={onSendMessage}
-          placeholder="Ваш вопрос"
-          onError={setError}
-        />
       </div>
     </div>
   );
