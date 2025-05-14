@@ -12,4 +12,5 @@ export const images = {
   Vector: 'https://Camber62.github.io/react-tilda-app/images/Vector.png',
   Ok: 'https://Camber62.github.io/react-tilda-app/images/Ok.png',
   Close: 'https://Camber62.github.io/react-tilda-app/images/Close.png',
+  History: 'https://Camber62.github.io/react-tilda-app/images/History.png',
 }; 

@@ -48,20 +48,20 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
 
     // Установка textChunks без немедленного сброса
     useEffect(() => {
-        console.log("Message received:", message);
+        // console.log("Message received:", message);
         if (message) {
             const chunks = StringSplitting(message);
-            console.log("Chunks created:", chunks);
+            // console.log("Chunks created:", chunks);
             setTextChunks(chunks);
             // Убираем resetPlayer() отсюда
         }
     }, [message]);
 
     const convertTextToAudio = useCallback(async (text: string, index: number) => {
-        console.log("convertTextToAudio called with text:", text, "index:", index);
+        // console.log("convertTextToAudio called with text:", text, "index:", index);
         try {
             const response: TextToSpeechResponse = await API.textToSpeechAPI(text);
-            console.log("API response:", response);
+            // console.log("API response:", response);
             if (response && response.audio_file_url) {
                 setAudioTracks((prev) => [...prev, { index, url: response.audio_file_url }]);
             } else {
@@ -73,7 +73,7 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
     }, []);
 
     useEffect(() => {
-        console.log("textChunks updated:", textChunks);
+        // console.log("textChunks updated:", textChunks);
         if (textChunks.length > 0) {
             textChunks.forEach((chunk, index) => {
                 convertTextToAudio(chunk, index);
@@ -84,7 +84,7 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
     const updateCurrentTrack = useCallback(() => {
         const track = audioTracks.find((item) => item.index === currentTrackIndex);
         if (track) {
-            console.log("Updating current track URL:", track.url);
+            // console.log("Updating current track URL:", track.url);
             setCurrentTrackUrl(track.url);
         }
     }, [audioTracks, currentTrackIndex]);

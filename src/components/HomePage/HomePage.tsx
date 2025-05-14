@@ -1,37 +1,54 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useWebSocket from 'react-use-websocket';
 import API from '../../api';
-import { images } from '../../config/images';
-import Modal from '../Modal/Modal';
+import { ChatType } from '../../api/initChat';
 import { AudioPlayer } from '../../AudioPlayer';
-import styles from './HomePage.module.css';
-import { Message, WebSocketMessage } from '../../types/chat';
+import { images } from '../../config/images';
+import { ChatJsonData, Message, WebSocketMessage } from '../../types/chat';
 import ChatInput from '../ChatInput/ChatInput';
-import { useAudioRecording } from '../../hooks/useAudioRecording';
+import Modal from '../Modal/Modal';
+import styles from './HomePage.module.css';
 
 const WS_URL_PREFIX = 'wss://api-ai.deeptalk.tech/chat-server-ws/ws/';
 const WebSocketStatus = {
   OPEN: 1,
 };
 
+
+
 const HomePage: React.FC = () => {
   // Состояния
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [socketUrl, setSocketUrl] = useState<string | null>(null);
   const [currentAudioMessage, setCurrentAudioMessage] = useState<string>('');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [inputMessage, setInputMessage] = useState('');
   const processedMessageIds = useRef<Set<string>>(new Set());
+  const [chatJsonData, setChatJsonData] = useState<ChatJsonData | null>(null);
+  const [isChatInitialized, setIsChatInitialized] = useState(false);
+  const [chatType, setChatType] = useState<ChatType>(ChatType.CUSTOMER_SURVEY);
+
+
+  useEffect(() => {
+    console.log(chatJsonData);
+  }, [chatJsonData]);
 
   // WebSocket
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket<WebSocketMessage>(
     socketUrl,
     {
-      onOpen: () => console.log('WebSocket соединение установлено'),
+      onOpen: () => {
+        console.log('WebSocket соединение установлено');
+        if (chatType === ChatType.CUSTOMER_SURVEY) {
+          sendJsonMessage({
+            command: 'send_message',
+            body: { text: 'start' },
+          });
+        }
+      },
       shouldReconnect: () => true,
       reconnectAttempts: 3,
       reconnectInterval: 500,
@@ -40,60 +57,68 @@ const HomePage: React.FC = () => {
   );
 
   // Отправка сообщения
-  const sendMessage = useCallback(
-    (text: string) => {
-      if (!text.trim() || readyState !== WebSocketStatus.OPEN) return;
+  const sendMessage = useCallback((text: string) => {
+    if (readyState !== WebSocketStatus.OPEN) {
+      handleStartChat(ChatType.MAIN_CHAT);
+    }
 
-      const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
-      setMessages((prev) => [...prev, userMessage]);
-      setOpenModal(true);
+    if (!text.trim()) return;
 
-      sendJsonMessage({
-        command: 'send_message',
-        body: { text },
-      });
-    },
+    const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
+    setMessages((prev) => [...prev, userMessage]);
+
+    sendJsonMessage({
+      command: 'send_message',
+      body: { text },
+    });
+  },
     [sendJsonMessage, readyState]
   );
 
-  const {
-    isRecording,
-    isAudioReady,
-    pendingAudio,
-    handleMicPress,
-    handleMicRelease,
-    handleAudioCancel,
-    handleAudioConfirm
-  } = useAudioRecording({
-    onAudioRecognized: sendMessage,
-    onError: setError
-  });
 
+  // Открытие модального окна
+  useEffect(() => {
+    if (messages.length > 0) {
+      setOpenModal(true);
+    }
+  }, [messages]);
+
+
+  // Обработчик события для открытия модального окна
   useEffect(() => {
     document.addEventListener('TriggerModalEvent', (event) => {
+      handleStartChat(ChatType.MAIN_CHAT);
       setOpenModal(true);
+
     });
   }, []);
 
-  // Инициализация чата
+
+
+  // Обработчик клика для инициализации чата
+  const handleStartChat = async (chatType: ChatType) => {
+    setChatType(chatType);
+    if (isChatInitialized) return;
+
+    setIsLoading(true);
+    try {
+      setError(null);
+      const chatResponse = await API.initChat(chatType);
+      setChatId(chatResponse.id);
+      setIsChatInitialized(true);
+    } catch (err: any) {
+      setError(err.message || 'Не удалось инициализировать чат');
+      setMessages([{ text: 'Извините, произошла ошибка', isUser: false }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Удаляем старый useEffect для инициализации чата
   useEffect(() => {
-    const initializeChat = async () => {
-      if (chatId) {
-        setSocketUrl(`${WS_URL_PREFIX}${chatId}`);
-        return;
-      }
-      try {
-        setError(null);
-        const chatResponse = await API.initChat();
-        setChatId(chatResponse.id);
-      } catch (err: any) {
-        setError(err.message || 'Не удалось инициализировать чат');
-        setMessages([{ text: 'Извините, произошла ошибка', isUser: false }]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    initializeChat();
+    if (chatId) {
+      setSocketUrl(`${WS_URL_PREFIX}${chatId}`);
+    }
   }, [chatId]);
 
   // Обработка сообщений WebSocket
@@ -106,11 +131,21 @@ const HomePage: React.FC = () => {
       if (processedMessageIds.current.has(body.message_id)) return;
 
       processedMessageIds.current.add(body.message_id);
+
+      // Обновляем JSON данные, если они есть в сообщении
+      // if (body.message?.content?.text) {
+      //   const jsonData = JSON.parse(body.message.content.text) as ChatJsonData;
+      //   setChatJsonData(jsonData);
+      // }
+
       const newMessage: Message = {
         id: body.message_id,
-        text: body.message?.content.text || 'Ошибка: текст сообщения отсутствует',
+        text: (chatType === ChatType.CUSTOMER_SURVEY
+          ? body.message?.content?.json?.message
+          : body.message?.content?.text) || 'Нет сообщения',
         isUser: false,
       };
+
       setMessages((prev) => [...prev, newMessage]);
       setIsLoading(false);
 
@@ -125,23 +160,23 @@ const HomePage: React.FC = () => {
     }
   }, [lastJsonMessage]);
 
-  // Обработка отправки текстового сообщения
-  const handleSend = useCallback(() => {
-    if (!inputMessage.trim()) return;
-    sendMessage(inputMessage);
-    setInputMessage('');
-  }, [inputMessage, sendMessage]);
-
-  // Обработка нажатия клавиш
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
+  // Закрытие чата
+  const closeChat = useCallback(() => {
+    // Закрываем WebSocket соединение
+    if (socketUrl) {
+      setSocketUrl(null);
+    }
+    // Сбрасываем все состояния
+    setMessages([]);
+    setChatId('');
+    setError(null);
+    setIsChatInitialized(false);
+    setChatJsonData(null);
+    setCurrentAudioMessage('');
+    setIsAudioPlaying(false);
+    setOpenModal(false);
+    processedMessageIds.current.clear();
+  }, [socketUrl]);
 
   return (
     <div className="App">
@@ -160,7 +195,11 @@ const HomePage: React.FC = () => {
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
-            <button className="actionButton">
+            <button
+              className="actionButton"
+              onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
+              // disabled={isLoading || isChatInitialized}
+            >
               <img src={images.Group9} alt="Lightbulb" className="icon" />
               Давайте познакомимся
             </button>
@@ -193,6 +232,7 @@ const HomePage: React.FC = () => {
           messages={messages}
           onSendMessage={sendMessage}
           isLoading={isLoading}
+          closeChat={closeChat}
         />
       )}
       {currentAudioMessage && (

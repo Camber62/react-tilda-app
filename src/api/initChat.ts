@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+export enum ChatType {
+  CUSTOMER_SURVEY = 'customer_survey',
+  MAIN_CHAT = 'main_chat'
+}
+
 interface ChatInitResponse {
   id: string;
   organization: string | null;
@@ -7,12 +12,24 @@ interface ChatInitResponse {
   date_time: string;
 }
 
-export const initChat = async (): Promise<ChatInitResponse> => {
+const CHAT_ENDPOINTS = {
+  [ChatType.CUSTOMER_SURVEY]: '/api/v1/chats/landing/customer_survey/ru/',
+  [ChatType.MAIN_CHAT]: '/api/v1/chats/landing/main_chat/ru/'
+};
+
+export const initChat = async (chatType: ChatType = ChatType.CUSTOMER_SURVEY): Promise<ChatInitResponse> => {
   try {
-    const response = await axios.post<ChatInitResponse>('https://api-ai.deeptalk.tech/core-ai/api/v1/chats/deeptalk/fos/ru/');
+    const endpoint = CHAT_ENDPOINTS[chatType];
+    const baseUrl = 'https://api-ai.deeptalk.tech/core-ai';
+    const userInfo = {
+      "user_info": "Ярополк"
+    }
+
+    const response = await axios.post<ChatInitResponse>(`${baseUrl}${endpoint}`, userInfo);
+
     return response.data;
   } catch (error) {
-    console.error('Ошибка при инициализации чата:', error);
+    console.error(`Ошибка при инициализации чата типа ${chatType}:`, error);
     throw error;
   }
 };

@@ -10,9 +10,10 @@ interface ModalProps {
   messages: Message[];
   onSendMessage: (message: string) => void;
   isLoading?: boolean;
+  closeChat: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoading = false }) => {
+const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoading = false, closeChat }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -27,8 +28,9 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
     <div className={styles['modal-overlay']}>
       <div className={styles['modal-container']}>
         <div className={styles['modal-header']}>
+          <img src={images.History} alt="History" className={styles['history-icon']} />
           <button
-            onClick={() => setOpen(false)}
+            onClick={closeChat}
             className={`${styles['icon-button']} ${styles['close-button']}`}
             aria-label="Close chat"
           >
