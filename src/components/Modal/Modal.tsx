@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ setOpen, messages, onSendMessage, isLoadi
                 aria-label="Назад к чату"
                 style={{ marginRight: 8 }}
               >
-                назад
+                <img src={images.Back} alt="Back" />
               </button>
             ) : (
               <button

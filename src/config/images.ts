@@ -15,4 +15,5 @@ export const images = {
   CloseBg: 'https://Camber62.github.io/react-tilda-app/images/CloseBg.png',
   History: 'https://Camber62.github.io/react-tilda-app/images/History.png',
   Vector6: 'https://Camber62.github.io/react-tilda-app/images/Vector6.png',
+  Back: 'https://Camber62.github.io/react-tilda-app/images/Back.png',
 }; 
