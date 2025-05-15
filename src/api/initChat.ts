@@ -2,7 +2,8 @@ import axios from 'axios';
 
 export enum ChatType {
   CUSTOMER_SURVEY = 'customer_survey',
-  MAIN_CHAT = 'main_chat'
+  MAIN_CHAT = 'main_chat',
+  MAIN_CHAT_TEST = 'main_chat_test'
 }
 
 interface ChatInitResponse {
@@ -14,7 +15,8 @@ interface ChatInitResponse {
 
 const CHAT_ENDPOINTS = {
   [ChatType.CUSTOMER_SURVEY]: '/api/v1/chats/landing/customer_survey/ru/',
-  [ChatType.MAIN_CHAT]: '/api/v1/chats/landing/main_chat/ru/'
+  [ChatType.MAIN_CHAT]: '/api/v1/chats/landing/main_chat/ru/',
+  [ChatType.MAIN_CHAT_TEST]: '/api/v1/chats/landing/main_chat/ru/'
 };
 
 export const initChat = async (chatType: ChatType, userInfo: string): Promise<ChatInitResponse> => {

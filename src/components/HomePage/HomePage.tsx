@@ -28,17 +28,11 @@ const HomePage: React.FC = () => {
   const [isChatInitialized, setIsChatInitialized] = useState(false);
   const [chatType, setChatType] = useState<ChatType>(ChatType.CUSTOMER_SURVEY);
 
-  // useEffect(() => {
-  //   console.log(userInfo); 
-  // }, [userInfo]);
-
-  // Загрузка сохраненной информации о пользователе при монтировании компонента
   useEffect(() => {
-    const savedUserInfo = storageService.getUserInfo();
-    if (savedUserInfo) {
-      setUserInfo(savedUserInfo);
-    }
-  }, []);
+    console.log('userInfo', userInfo);
+    console.log('chatType', chatType);
+  }, [userInfo,chatType]);
+
 
 
   // WebSocket
@@ -47,12 +41,12 @@ const HomePage: React.FC = () => {
     {
       onOpen: () => {
         console.log('WebSocket соединение установлено');
-        // if (chatType === ChatType.CUSTOMER_SURVEY) {
-        //   sendJsonMessage({
-        //     command: 'send_message',
-        //     body: { text: 'start' },
-        //   });
-        // }
+        if (chatType === ChatType.CUSTOMER_SURVEY) {
+          sendJsonMessage({
+            command: 'send_message',
+            body: { text: 'start' },
+          });
+        }
       },
       shouldReconnect: () => true,
       reconnectAttempts: 3,
@@ -61,8 +55,7 @@ const HomePage: React.FC = () => {
     !!socketUrl
   );
 
-  // Проверка на открытое соединение
-  const isConnectionOpen = readyState === WebSocketStatus.OPEN;
+
 
   // Открытие чата по id
   const openChatHistory = useCallback((chatId: string, message: Message[]) => {
@@ -102,7 +95,7 @@ const HomePage: React.FC = () => {
   // Обработчик события для открытия модального окна
   useEffect(() => {
     document.addEventListener('TriggerModalEvent', (event) => {
-      handleStartChat(ChatType.MAIN_CHAT);
+      handleStartChat(ChatType.MAIN_CHAT_TEST);
       setOpenModal(true);
 
     });
@@ -117,8 +110,11 @@ const HomePage: React.FC = () => {
     setIsLoading(true);
     try {
       setError(null);
-      const userInfoData = userInfo || {};
-      const chatResponse = await API.initChat(chatType, JSON.stringify(userInfoData));
+      
+      // Получаем актуальные данные из localStorage перед инициализацией чата
+      const currentUserInfo = storageService.getUserInfo();
+      
+      const chatResponse = await API.initChat(chatType, JSON.stringify(chatType === ChatType.MAIN_CHAT ? currentUserInfo : {}));
       setChatId(chatResponse.id);
       setIsChatInitialized(true);
     } catch (err: any) {
@@ -270,7 +266,6 @@ const HomePage: React.FC = () => {
           isLoading={isLoading}
           closeChat={closeChat}
           openChatById={openChatHistory}
-          isConnectionOpen={isConnectionOpen}
         />
       )}
       {currentAudioMessage && (

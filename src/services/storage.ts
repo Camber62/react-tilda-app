@@ -36,7 +36,13 @@ export const storageService = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     }
   },
+  
+  // Удалить всю историю чатов
+  clearAllChats: (): void => {
+    localStorage.removeItem(STORAGE_KEY);
+  },
 
+  
   // Удалить чат из истории
   deleteChat: (chatId: string): void => {
     const history = storageService.getHistory();
@@ -63,5 +69,6 @@ export const storageService = {
   // Удалить информацию о пользователе
   deleteUserInfo: (): void => {
     localStorage.removeItem(USER_INFO_KEY);
-  }
+  },
+
 }; 

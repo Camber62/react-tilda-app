@@ -15,6 +15,8 @@ interface ChatInputProps {
 const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeholder, onError, disabled = false }) => {
   const [inputText, setInputText] = useState('');
   const [isRecognizing, setIsRecognizing] = useState(false);
+  const [showAudioPreview, setShowAudioPreview] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const {
     isRecording,
@@ -32,10 +34,21 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
     onError: onError || (() => {})
   });
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
-    onSendMessage(inputText);
-    setInputText('');
+  const handleSend = async () => {
+    if (inputText.trim()) {
+      onSendMessage(inputText);
+      setInputText('');
+    }
+    
+    if (pendingAudio && isAudioReady) {
+      setIsSending(true);
+      setIsRecognizing(true);
+      try {
+        await handleAudioConfirm();
+      } finally {
+        setIsSending(false);
+      }
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -50,16 +63,54 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
     handleAudioConfirm();
   };
 
-  if (isAudioReady && pendingAudio) {
+  const handleAudioButtonClick = () => {
+    setShowAudioPreview(true);
+  };
+
+  if (showAudioPreview && isAudioReady && pendingAudio) {
     return (
       <AudioPreview
         audioBlob={pendingAudio}
-        onCancel={handleAudioCancel}
+        onCancel={() => {
+          setShowAudioPreview(false);
+          handleAudioCancel();
+        }}
         onConfirm={handleAudioConfirmClick}
         isRecognizing={isRecognizing}
       />
     );
   }
+
+  const renderButtonGroup = () => {
+    if (isSending || isRecognizing) {
+      return (
+        <div className={styles.buttonGroup}>
+          <div className={styles.loader}>Распознавание...</div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.buttonGroup}>
+        <button
+          onMouseDown={handleMicPress}
+          onMouseUp={handleMicRelease}
+          onMouseLeave={handleMicRelease}
+          className={styles.micButton}
+          data-recording={isRecording}
+          disabled={disabled || Boolean(pendingAudio && isAudioReady)}
+        >
+          {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
+        </button>
+        {pendingAudio && <button onClick={handleAudioButtonClick} className={styles.sendButton} disabled={disabled}>
+          <img src={images.Group66} alt="audio" className="icon" />
+        </button>}
+        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
+          <img src={images.Send} alt="Send" className="icon" />
+        </button>
+      </div>
+    );
+  };
 
   return (
   <>
@@ -77,21 +128,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
       <div className={styles.customPlaceholder}>
         <span>{placeholder}</span>
       </div>
-      <div className={styles.buttonGroup}>
-        <button
-          onMouseDown={handleMicPress}
-          onMouseUp={handleMicRelease}
-          onMouseLeave={handleMicRelease}
-          className={styles.micButton}
-          data-recording={isRecording}
-          disabled={disabled}
-        >
-          {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
-        </button>
-        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
-          <img src={images.Group66} alt="Send" className="icon" />
-        </button>
-      </div>
+      {renderButtonGroup()}
     </div>
     ):(
     <div className={styles.inputContainerModal}>
@@ -107,21 +144,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
       <div className={styles.customPlaceholder}>
         <span>{placeholder}</span>
       </div>
-      <div className={styles.buttonGroup}>
-        <button
-          onMouseDown={handleMicPress}
-          onMouseUp={handleMicRelease}
-          onMouseLeave={handleMicRelease}
-          className={styles.micButton}
-          data-recording={isRecording}
-          disabled={disabled}
-        >
-          {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
-        </button>
-        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
-          <img src={images.Group66} alt="Send" className="icon" />
-        </button>
-      </div>
+      {renderButtonGroup()}
     </div>
     )}
   </>

@@ -13,11 +13,10 @@ interface ModalProps {
   isLoading?: boolean;
   closeChat: () => void;
   openChatById: (chatId: string, messages: Message[]) => void;
-  isConnectionOpen: boolean;
 }
 
 
-const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isConnectionOpen }) => {
+const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
@@ -118,10 +117,14 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
               onSendMessage={onSendMessage}
               placeholder="Ваш вопрос"
               onError={setError}
-              disabled={!isConnectionOpen}
             />
           </>
         )}
+
+        {/* <button onClick={() => {
+          storageService.clearAllChats();
+        }}>Удалить историю</button> */}
+
         {showHistory && (
           <div className={styles['history-list']} style={{ position: 'relative', margin: 0, top: 0, left: 0, right: 0, boxShadow: 'none', border: 'none', borderRadius: 0, maxHeight: 'none', height: '100%', minHeight: 320 }}>
             <div style={{ height: '1px', background: '#f0f0f0', margin: '0 0 8px 0' }} />
