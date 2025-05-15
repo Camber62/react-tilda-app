@@ -58,7 +58,9 @@
 }
 
 .input:focus + .customPlaceholder,
-.input:not(:placeholder-shown) + .customPlaceholder {
+.input:not(:placeholder-shown) + .customPlaceholder,
+.inputModal:focus + .customPlaceholder,
+.inputModal:not(:placeholder-shown) + .customPlaceholder {
   opacity: 0;
   visibility: hidden;
 }

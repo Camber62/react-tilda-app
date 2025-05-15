@@ -27,11 +27,12 @@ const HomePage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<ChatJsonData | null>(null);
   const [isChatInitialized, setIsChatInitialized] = useState(false);
   const [chatType, setChatType] = useState<ChatType>(ChatType.CUSTOMER_SURVEY);
+  const [isTransitionChat, setIsTransitionChat] = useState(false);
 
   useEffect(() => {
-    console.log('userInfo', userInfo);
+    console.log('isChatInitialized', isChatInitialized);
     console.log('chatType', chatType);
-  }, [userInfo,chatType]);
+  }, [isChatInitialized, chatType]);
 
 
 
@@ -41,12 +42,15 @@ const HomePage: React.FC = () => {
     {
       onOpen: () => {
         console.log('WebSocket соединение установлено');
-        if (chatType === ChatType.CUSTOMER_SURVEY) {
-          sendJsonMessage({
-            command: 'send_message',
-            body: { text: 'start' },
-          });
-        }
+        sendJsonMessage({
+          command: 'send_message',
+          body: { text: 'start' },
+        });
+        setIsLoading(true);
+      },
+      onError: (event) => {
+        console.error('WebSocket ошибка:', event);
+        setError('Ошибка соединения с сервером. Попробуйте снова.');
       },
       shouldReconnect: () => true,
       reconnectAttempts: 3,
@@ -54,8 +58,6 @@ const HomePage: React.FC = () => {
     },
     !!socketUrl
   );
-
-
 
   // Открытие чата по id
   const openChatHistory = useCallback((chatId: string, message: Message[]) => {
@@ -69,20 +71,17 @@ const HomePage: React.FC = () => {
     if (readyState !== WebSocketStatus.OPEN) {
       handleStartChat(ChatType.MAIN_CHAT);
     }
-
     if (!text.trim()) return;
-
     const userMessage: Message = { text, isUser: true, id: Date.now().toString() };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
+    setIsLoading(true);
 
     sendJsonMessage({
       command: 'send_message',
       body: { text },
     });
-
   }, [sendJsonMessage, readyState, messages]);
-
 
   // Открытие модального окна
   useEffect(() => {
@@ -91,32 +90,36 @@ const HomePage: React.FC = () => {
     }
   }, [messages]);
 
-
   // Обработчик события для открытия модального окна
   useEffect(() => {
     document.addEventListener('TriggerModalEvent', (event) => {
       handleStartChat(ChatType.MAIN_CHAT_TEST);
       setOpenModal(true);
-
     });
   }, []);
 
-
   // Обработчик клика для инициализации чата
   const handleStartChat = async (chatType: ChatType) => {
-    setChatType(chatType);
-    if (isChatInitialized) return;
-
     setIsLoading(true);
+    setChatType(chatType);
+
+    if (isChatInitialized) {
+      console.log('чат уже инициализирован');
+      return;
+    }
+
     try {
+      console.log('идет инициализация');
+
       setError(null);
-      
+
       // Получаем актуальные данные из localStorage перед инициализацией чата
       const currentUserInfo = storageService.getUserInfo();
-      
-      const chatResponse = await API.initChat(chatType, JSON.stringify(chatType === ChatType.MAIN_CHAT ? currentUserInfo : {}));
+      const chatResponse = await API.initChat(chatType, JSON.stringify(currentUserInfo));
       setChatId(chatResponse.id);
       setIsChatInitialized(true);
+      setOpenModal(true);
+      console.log('Chat initialized', chatResponse.id);
     } catch (err: any) {
       setError(err.message || 'Не удалось инициализировать чат');
       setMessages([{ text: 'Извините, произошла ошибка', isUser: false }]);
@@ -125,12 +128,14 @@ const HomePage: React.FC = () => {
     }
   };
 
-  // Удаляем старый useEffect для инициализации чата
+
+  // useEffect для инициализации чата
   useEffect(() => {
     if (chatId) {
       setSocketUrl(`${WS_URL_PREFIX}${chatId}`);
     }
   }, [chatId]);
+
 
   // Обработка сообщений WebSocket
   useEffect(() => {
@@ -138,27 +143,31 @@ const HomePage: React.FC = () => {
 
     const { command, body } = lastJsonMessage;
 
+    // Обработка входящих сообщений
     if (command === 'send_message' && body?.message_id) {
+      // Проверяем, не обрабатывали ли мы уже это сообщение
       if (processedMessageIds.current.has(body.message_id)) return;
-
       processedMessageIds.current.add(body.message_id);
+      setIsLoading(false);
 
-      // Обновляем JSON данные, если они есть в сообщении
+      // Для опроса (customer_survey) сохраняем данные пользователя
       if (chatType === ChatType.CUSTOMER_SURVEY && body.message?.content?.text) {
         const jsonData = JSON.parse(body.message.content.text) as ChatJsonData;
         setUserInfo(jsonData);
         storageService.saveUserInfo(jsonData);
-
       }
 
+      // Создаем новое сообщение для отображения
       const newMessage: Message = {
         id: body.message_id,
+        // Для опроса берем сообщение из json, для обычного чата из text
         text: (chatType === ChatType.CUSTOMER_SURVEY
           ? body.message?.content?.json?.message
           : body.message?.content?.text) || 'Нет сообщения',
         isUser: false,
       };
 
+      // Обновляем список сообщений и сохраняем историю
       setMessages((prev) => {
         const updatedMessages = [...prev, newMessage];
 
@@ -178,38 +187,39 @@ const HomePage: React.FC = () => {
         return updatedMessages;
       });
 
-      setIsLoading(false);
+      // Проверяем завершение опроса и переключаем на основной чат
+      if (chatType === ChatType.CUSTOMER_SURVEY && body.status === 'ended') {
+        console.log('Опрос завершен, переключение на основной чат...');
+        // Затем закрываем текущий чат
+        closeChat();
+        setIsTransitionChat(true);
+      }
 
+
+      // Если есть текст сообщения и это не 'start', запускаем аудио
       if (newMessage.text && newMessage.text !== 'start') {
         setCurrentAudioMessage(newMessage.text);
         setIsAudioPlaying(true);
       }
     }
 
-    if (command === 'status') {
-      setIsLoading(body.status === 'generating');
-    }
+
   }, [lastJsonMessage]);
 
-
-
-  // Закрытие чата
-  const closeChat = useCallback(() => {
+  // Функция закрытия чата
+  const closeChat = () => {
+    console.log('Закрытие чата, сброс состояний...');
     // Закрываем WebSocket соединение
-    if (socketUrl) {
-      setSocketUrl(null);
-    }
-    // Сбрасываем все состояния
+    setSocketUrl(null);
+    // Сбрасываем все состояния чата
     setMessages([]);
     setChatId('');
     setError(null);
     setIsChatInitialized(false);
-    setUserInfo(null);
     setCurrentAudioMessage('');
     setIsAudioPlaying(false);
     setOpenModal(false);
-    processedMessageIds.current.clear();
-  }, [socketUrl]);
+  }
 
   return (
     <div className="App">
