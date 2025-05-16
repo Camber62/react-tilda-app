@@ -3,6 +3,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 import { сhatWSStatus, сhatWSStatusChat, сhatWSSendMessage } from '../types/chatWSTypes';
 import { Message } from '../types/chat';
+import { ChatType } from '../api/initChat';
 
 const webSocketOptions = {
   shouldReconnect: () => true,
@@ -12,7 +13,8 @@ const webSocketOptions = {
 
 export const useChatWS = (
   initialPhrase: string | undefined,
-  urlWS: string | undefined
+  urlWS: string | undefined,
+  chatType?: ChatType
 ) => {
   const [returnIsWaiting, setReturnIsWaiting] = useState<boolean>(false);
   const [returnIsEndChat, setReturnIsEndChat] = useState<boolean>(false);
@@ -40,9 +42,8 @@ export const useChatWS = (
     });
   }, [])
 
-  // Очищаем сообщения только при создании нового чата
+  // Очищаем все состояния при изменении urlWS`
   useEffect(() => {
-    // Очищаем все состояния при изменении urlWS
     setReturnMessages([]);
     setReturnIsWaiting(false);
     setReturnIsEndChat(false);
@@ -60,7 +61,7 @@ export const useChatWS = (
 
   // Обработчик отправки сообщения
   const commandSendMessage = useCallback((message: сhatWSSendMessage) => {
-    const messageId = message.body.message_id.toString();
+    const messageId = message.body.message_id?.toString();
 
     // Проверяем, если сообщение еще не было обработано
     if (!processedMessageIds.current.has(messageId)) {
@@ -131,12 +132,10 @@ export const useChatWS = (
       });
       getWebSocket()?.close();
       setReturnIsEndChat(true);
-      // Не очищаем сообщения при закрытии чата
       setReturnIsWaiting(false);
       setReturnUsesAI(false);
       setReturnLikesSquidGame(false);
       setReturnFavoriteWork('');
-      // Не очищаем processedMessageIds при закрытии чата
       isSendFerstMessage.current = false;
     }
   }, [readyState, sendJsonMessage, getWebSocket]);
@@ -177,7 +176,9 @@ export const useChatWS = (
       }
 
       if (lastJsonMessage.command === 'status_chat') {
-        setReturnIsEndChat(lastJsonMessage.body.status === 'ended');
+        const isEnded = lastJsonMessage.body.status === 'ended';
+        setReturnIsEndChat(isEnded);
+     
       }
 
       if (lastJsonMessage.command === 'send_message') {

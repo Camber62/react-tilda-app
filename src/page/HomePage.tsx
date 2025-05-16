@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ReadyState } from 'react-use-websocket';
+import { v4 as uuidv4 } from 'uuid';
 import { ChatType, initChat } from '../api/initChat';
 import { AudioPlayer } from '../AudioPlayer';
 import ChatInput from '../components/ChatInput/ChatInput';
@@ -9,8 +11,6 @@ import { useChatAudio } from '../hooks/useChatAudio';
 import { storageService } from '../services/storage';
 import { ChatJsonData, Message } from '../types/chat';
 import styles from './HomePage.module.css';
-import { v4 as uuidv4 } from 'uuid';
-import { ReadyState } from 'react-use-websocket';
 
 const WS_URL_PREFIX = 'wss://api-ai.deeptalk.tech/chat-server-ws/ws/';
 
@@ -22,22 +22,13 @@ const HomePage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<ChatJsonData | null>(null);
   const [isHistoryMode, setIsHistoryMode] = useState(false);
   const [historyMessages, setHistoryMessages] = useState<Message[]>([]);
-  const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState } = useChatWS(
+  const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     chatType === ChatType.CUSTOMER_SURVEY && !isHistoryMode ? 'start' : undefined,
-    chatId ? `${WS_URL_PREFIX}${chatId}` : undefined
+    chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
+    chatType ?? undefined
   );
 
   const { currentAudioMessage, isAudioPlaying, setIsAudioPlaying, handleAudioEnd } = useChatAudio(messages, openModal);
-
-
-
-  useEffect(() => {
-    // console.log('userInfo', userInfo);
-    // console.log('chatId', chatId);
-    // console.log('isHistoryMode', isHistoryMode);
-    console.log('messages', messages);
-    // console.log('isLoading', isLoading);
-  }, [userInfo, chatId, isHistoryMode, messages, isLoading]);
 
   // Функция сброса состояния чата
   const resetChatState = useCallback(() => {
@@ -86,7 +77,9 @@ const HomePage: React.FC = () => {
           storageService.saveUserInfo(userData);
         }
       }
-
+      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat) {
+        console.log('Опрос завершен');
+      }
     }
   }, [messages, chatType, chatId, isHistoryMode]);
 
@@ -101,7 +94,7 @@ const HomePage: React.FC = () => {
       setOpenModal(true);
 
       if (initialMessage) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 10));
         sendMessage(initialMessage);
       }
     } catch (err) {

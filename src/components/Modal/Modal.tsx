@@ -16,12 +16,12 @@ interface ModalProps {
   isHistoryMode?: boolean;
 }
 
-
 const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = React.useState<ChatHistoryItem[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
 
   // Получение истории чатов при открытии истории
   useEffect(() => {
@@ -40,15 +40,23 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
   }, [messages]);
 
   // Отображение точек загрузки при генерации ответа
-  const showLoadingDots = isLoading && messages.length > 0 && messages[messages.length - 1].isUser;
+  const showLoadingDots = isLoading && (messages.length === 0 || messages[messages.length - 1]?.isUser);
 
   // Обработка клика по истории чатов
   const handleHistoryClick = (item: ChatHistoryItem) => {
     console.log('Открытие чата из истории:', item);
+    setIsHistoryLoading(true);
     openChatById(item.id, item.messages);
     setShowHistory(false);
   };
 
+  // Добавляем эффект для сброса состояния загрузки при получении сообщений
+  useEffect(() => {
+    if (messages.length > 0) {
+      setIsHistoryLoading(false);
+    }
+  }, [messages]);
+ 
   function formatTimestamp(timestamp: number): string {
     const now = Date.now();
     const diff = now - timestamp;
@@ -94,35 +102,43 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
         </div>
         {!showHistory && (
           <>
-            <div className={styles['messages-area']}>
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
-                >
-                  <img
-                    src={msg.isUser ? images.Frame4 : images.Frame3}
-                    alt={msg.isUser ? "User avatar" : "Bot avatar"}
-                    className={styles['message-avatar']}
-                  />
-                  <div className={styles['message-bubble']}>
-                    <p>{msg.text}</p>
-                  </div>
+            {isHistoryLoading ? (
+              <div className={styles['loading-container']}>
+                <div className={styles['loading-spinner']}></div>
+              </div>
+            ) : (
+              <>
+                <div className={styles['messages-area']}>
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
+                    >
+                      <img
+                        src={msg.isUser ? images.Frame4 : images.Frame3}
+                        alt={msg.isUser ? "User avatar" : "Bot avatar"}
+                        className={styles['message-avatar']}
+                      />
+                      <div className={styles['message-bubble']}>
+                        <p>{msg.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {showLoadingDots && (
+                    <div className={`${styles.message} ${styles['bot-message']}`}>
+                      <LoadingDots />
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
-              ))}
-              {showLoadingDots && (
-                <div className={`${styles.message} ${styles['bot-message']}`}>
-                  <LoadingDots />
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-            <ChatInput
-              visualMode={false}
-              onSendMessage={onSendMessage}
-              placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
-              onError={setError}
-            />
+                <ChatInput
+                  visualMode={false}
+                  onSendMessage={onSendMessage}
+                  placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
+                  onError={setError}
+                />
+              </>
+            )}
           </>
         )}
 
