@@ -1,9 +1,16 @@
 import { ChatType } from '../api/initChat';
+import { BaseMessageBody, CustomerSurveyMessageContent, MainChatMessageContent } from './chatWSTypes';
 
 export interface Message {
   text: string;
   isUser: boolean;
   id?: string;
+  isShow?: boolean;
+  body?: BaseMessageBody & {
+    message: {
+      content: CustomerSurveyMessageContent | MainChatMessageContent;
+    };
+  };
 }
 
 export interface WebSocketMessage {

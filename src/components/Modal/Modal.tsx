@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { images } from '../../config/images';
 import { storageService } from '../../services/storage';
 import { ChatHistoryItem, Message } from '../../types/chat';
@@ -13,10 +13,11 @@ interface ModalProps {
   isLoading?: boolean;
   closeChat: () => void;
   openChatById: (chatId: string, messages: Message[]) => void;
+  isHistoryMode?: boolean;
 }
 
 
-const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById }) => {
+const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
@@ -26,7 +27,10 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
   useEffect(() => {
     if (showHistory) {
       const chatHistory = storageService.getHistory();
-      setHistory(chatHistory);
+      // Сортируем историю по времени (новые сверху)
+      const sortedHistory = [...chatHistory].sort((a, b) => b.timestamp - a.timestamp);
+      console.log('Загружена история чатов:', sortedHistory);
+      setHistory(sortedHistory);
     }
   }, [showHistory]);
 
@@ -40,7 +44,8 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
 
   // Обработка клика по истории чатов
   const handleHistoryClick = (item: ChatHistoryItem) => {
-    openChatById(item.id, item.messages || []);
+    console.log('Открытие чата из истории:', item);
+    openChatById(item.id, item.messages);
     setShowHistory(false);
   };
 
@@ -92,7 +97,7 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
             <div className={styles['messages-area']}>
               {messages.map((msg) => (
                 <div
-                  key={msg.id || msg.text + Math.random()}
+                  key={msg.id}
                   className={`${styles.message} ${msg.isUser ? styles['user-message'] : styles['bot-message']}`}
                 >
                   <img
@@ -115,15 +120,15 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
             <ChatInput
               visualMode={false}
               onSendMessage={onSendMessage}
-              placeholder="Ваш вопрос"
+              placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
               onError={setError}
             />
           </>
         )}
 
-        {/* <button onClick={() => {
+        <button onClick={() => {
           storageService.clearAllChats();
-        }}>Удалить историю</button> */}
+        }}>Удалить историю</button>
 
         {showHistory && (
           <div className={styles['history-list']} style={{ position: 'relative', margin: 0, top: 0, left: 0, right: 0, boxShadow: 'none', border: 'none', borderRadius: 0, maxHeight: 'none', height: '100%', minHeight: 320 }}>

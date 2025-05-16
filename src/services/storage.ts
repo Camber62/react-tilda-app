@@ -14,13 +14,22 @@ export const storageService = {
 
   // Сохранить новый чат или обновить существующий
   saveChat: (chat: ChatHistoryItem): void => {
+    // console.log('Сохранение чата в localStorage:', {
+    //   chatId: chat.id,
+    //   type: chat.type,
+    //   timestamp: new Date(chat.timestamp).toLocaleString(),
+    //   messagesCount: chat.messages.length
+    // });
+    
     const history = storageService.getHistory();
     const existingIndex = history.findIndex(item => item.id === chat.id);
     
     if (existingIndex !== -1) {
       history[existingIndex] = chat;
+      // console.log('Обновлен существующий чат:', chat.id);
     } else {
       history.push(chat);
+      // console.log('Добавлен новый чат:', chat.id);
     }
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
@@ -52,6 +61,7 @@ export const storageService = {
 
   // Сохранить информацию о пользователе
   saveUserInfo: (userInfo: ChatJsonData): void => {
+    // console.log('Сохранение информации о пользователе:', userInfo);
     localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
   },
 
