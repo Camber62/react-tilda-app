@@ -10,9 +10,10 @@ interface ChatInputProps {
   onError?: (error: string | null) => void;
   visualMode: boolean;
   disabled?: boolean;
+  isAudioPlaying?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeholder, onError, disabled = false }) => {
+const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeholder, onError, disabled = false, isAudioPlaying }) => {
   const [inputText, setInputText] = useState('');
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [showAudioPreview, setShowAudioPreview] = useState(false);
@@ -52,7 +53,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isAudioPlaying) {
       e.preventDefault();
       handleSend();
     }
@@ -98,14 +99,14 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
           onMouseLeave={handleMicRelease}
           className={styles.micButton}
           data-recording={isRecording}
-          disabled={disabled || Boolean(pendingAudio && isAudioReady)}
+          disabled={isAudioPlaying || Boolean(pendingAudio && isAudioReady)}
         >
           {isRecording ? '⏹' : <img src={images.Group67} alt="Mic" className="icon" />}
         </button>
-        {pendingAudio && <button onClick={handleAudioButtonClick} className={styles.sendButton} disabled={disabled}>
+        {pendingAudio && <button onClick={handleAudioButtonClick} className={styles.sendButton} disabled={isAudioPlaying}>
           <img src={images.Group66} alt="audio" className="icon" />
         </button>}
-        <button onClick={handleSend} className={styles.sendButton} disabled={disabled}>
+        <button onClick={handleSend} className={styles.sendButton} disabled={isAudioPlaying}>
           <img src={images.Send} alt="Send" className="icon" />
         </button>
       </div>

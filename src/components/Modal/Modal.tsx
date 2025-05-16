@@ -14,9 +14,10 @@ interface ModalProps {
   closeChat: () => void;
   openChatById: (chatId: string, messages: Message[]) => void;
   isHistoryMode?: boolean;
+  isAudioPlaying?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false }) => {
+const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false, isAudioPlaying}) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
@@ -136,6 +137,7 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
                   onSendMessage={onSendMessage}
                   placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
                   onError={setError}
+                  isAudioPlaying={isAudioPlaying}
                 />
               </>
             )}

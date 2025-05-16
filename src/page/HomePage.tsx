@@ -237,6 +237,7 @@ const HomePage: React.FC = () => {
           closeChat={handleCloseChat}
           openChatById={openChatHistory}
           isHistoryMode={isHistoryMode}
+          isAudioPlaying={isAudioPlaying}
         />
       )}
       {currentAudioMessage && (
