@@ -183,7 +183,7 @@ export const useChatWS = (
 
       if (lastJsonMessage.command === 'send_message') {
         // Проверяем, не является ли сообщение частью истории
-        const messageId = lastJsonMessage.body.message_id.toString();
+        const messageId = lastJsonMessage.body.message_id?.toString();
         if (!processedMessageIds.current.has(messageId)) {
           commandSendMessage(lastJsonMessage);
         }

@@ -77,19 +77,25 @@ const HomePage: React.FC = () => {
           storageService.saveUserInfo(userData);
         }
       }
-      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat) {
+
+      //Быстро переключает , покурить с озвучкой и передавать стартер
+      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying) {
         console.log('Опрос завершен');
+        const userInfo = storageService.getUserInfo();
+        if (userInfo) {
+          initChatSession(ChatType.MAIN_CHAT, undefined, userInfo);
+        }
       }
     }
   }, [messages, chatType, chatId, isHistoryMode]);
 
   // Инициализация нового чата
-  const initChatSession = useCallback(async (type: ChatType, initialMessage?: string) => {
+  const initChatSession = useCallback(async (type: ChatType, initialMessage?: string, userInfo?: ChatJsonData) => {
     try {
       resetChatState();
       setIsHistoryMode(false);
       setChatType(type);
-      const response = await initChat(type, JSON.stringify({}));
+      const response = await initChat(type, JSON.stringify(userInfo || {}));
       setChatId(response.id);
       setOpenModal(true);
 
@@ -119,7 +125,7 @@ const HomePage: React.FC = () => {
     if (wsState === ReadyState.OPEN && isHistoryMode) {
       console.log(88888);
       addMessages(historyMessages);
-    } 
+    }
   }, [wsState, historyMessages, addMessages, isHistoryMode])
 
   // Отправка сообщения в чат
