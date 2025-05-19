@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
       }
 
 
-      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying && !currentAudioMessage) {
+      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying) {
         console.log('Опрос завершен');
         console.log(isEndChat);
         setTimeout(() => {

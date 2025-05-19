@@ -151,9 +151,9 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
           </>
         )}
 
-        <button onClick={() => {
+        {/* <button onClick={() => {
           storageService.clearAllChats();
-        }}>Удалить историю</button>
+        }}>Удалить историю</button> */}
 
         {showHistory && (
           <div className={styles['history-list']} style={{ position: 'relative', margin: 0, top: 0, left: 0, right: 0, boxShadow: 'none', border: 'none', borderRadius: 0, maxHeight: 'none', height: '100%', minHeight: 320 }}>
