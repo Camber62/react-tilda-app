@@ -53,6 +53,12 @@ const HomePage: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const userInfo = storageService.getUserInfo();
+    setUserInfo(userInfo);
+    console.log('userInfo', userInfo);
+  }, []);
+
 
   // Обновляем сообщения и сохраняем данные
   useEffect(() => {
@@ -137,7 +143,7 @@ const HomePage: React.FC = () => {
       console.error('Ошибка при запуске чата:', err);
     }
 
-  }, [sendMessage, resetChatState,isHistoryMode]);
+  }, [sendMessage, resetChatState, isHistoryMode]);
 
 
   // Открытие истории чата
@@ -242,13 +248,15 @@ const HomePage: React.FC = () => {
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
-            <button
-              className="actionButton"
-              onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
-            >
-              <img src={images.Group9} alt="Lightbulb" className="icon" />
-              Давайте познакомимся
-            </button>
+            {(userInfo?.step_1.person_name === null || userInfo === null) && (
+              <button
+                className="actionButton"
+                onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
+              >
+                <img src={images.Group9} alt="Lightbulb" className="icon" />
+                Давайте познакомимся
+              </button>
+            )}
             <button className="actionButton">
               <img src={images.Group10} alt="Map" className="icon" />
               Помогу с навигацией

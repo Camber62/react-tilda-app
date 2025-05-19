@@ -53,7 +53,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isAudioPlaying) {
       e.preventDefault();
       handleSend();
     }
