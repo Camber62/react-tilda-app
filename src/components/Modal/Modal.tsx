@@ -15,9 +15,10 @@ interface ModalProps {
   openChatById: (chatId: string, messages: Message[]) => void;
   isHistoryMode?: boolean;
   isAudioPlaying?: boolean;
+  isChatEnded?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false, isAudioPlaying}) => {
+const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = false, closeChat, openChatById, isHistoryMode = false, isAudioPlaying, isChatEnded = false }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
@@ -132,13 +133,19 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
                   )}
                   <div ref={messagesEndRef} />
                 </div>
-                <ChatInput
-                  visualMode={false}
-                  onSendMessage={onSendMessage}
-                  placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
-                  onError={setError}
-                  isAudioPlaying={isAudioPlaying}
-                />
+                {isChatEnded ? (
+                  <div className={styles['chat-ended-message']}>
+                    Чат закрыт
+                  </div>
+                ) : (
+                  <ChatInput
+                    visualMode={false}
+                    onSendMessage={onSendMessage}
+                    placeholder={isHistoryMode ? "Начать новый чат" : "Ваш вопрос"}
+                    onError={setError}
+                    isAudioPlaying={isAudioPlaying}
+                  />
+                )}
               </>
             )}
           </>

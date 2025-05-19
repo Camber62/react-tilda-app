@@ -11,6 +11,7 @@ import { useChatAudio } from '../hooks/useChatAudio';
 import { storageService } from '../services/storage';
 import { ChatJsonData, Message } from '../types/chat';
 import styles from './HomePage.module.css';
+import { GetChatHistory } from '../api/chat';
 
 const WS_URL_PREFIX = 'wss://api-ai.deeptalk.tech/chat-server-ws/ws/';
 
@@ -22,8 +23,11 @@ const HomePage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<ChatJsonData | null>(null);
   const [isHistoryMode, setIsHistoryMode] = useState(false);
   const [historyMessages, setHistoryMessages] = useState<Message[]>([]);
+  const [chatNext, setChatNext] = useState(false);
+  const [isChatEnded, setIsChatEnded] = useState(false);
+  const [startMessage, setStartMessage] = useState<string | null>(null);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
-    chatType === ChatType.CUSTOMER_SURVEY && !isHistoryMode ? 'start' : undefined,
+    startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
     chatType ?? undefined
   );
@@ -39,6 +43,10 @@ const HomePage: React.FC = () => {
     setError(null);
     setIsHistoryMode(false);
   }, [closeChat, handleAudioEnd]);
+
+  console.log('isHistoryMode', isHistoryMode);
+  console.log('chatType', chatType);
+
 
   // Обновляем сообщения и сохраняем данные
   useEffect(() => {
@@ -78,16 +86,28 @@ const HomePage: React.FC = () => {
         }
       }
 
-      //Быстро переключает , покурить с озвучкой и передавать стартер
-      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying) {
+
+      if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying && !currentAudioMessage) {
         console.log('Опрос завершен');
-        const userInfo = storageService.getUserInfo();
-        if (userInfo) {
-          initChatSession(ChatType.MAIN_CHAT, undefined, userInfo);
-        }
+        console.log(isEndChat);
+        setTimeout(() => {
+          setChatNext(true);
+        }, 10);
       }
     }
   }, [messages, chatType, chatId, isHistoryMode]);
+
+
+  useEffect(() => {
+    if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && chatNext && !isAudioPlaying) {
+      const userInfo = storageService.getUserInfo();
+      if (userInfo) {
+        setStartMessage('start')
+        initChatSession(ChatType.MAIN_CHAT, undefined, userInfo);
+      }
+    }
+  }, [chatNext, isAudioPlaying]);
+
 
   // Инициализация нового чата
   const initChatSession = useCallback(async (type: ChatType, initialMessage?: string, userInfo?: ChatJsonData) => {
@@ -95,6 +115,9 @@ const HomePage: React.FC = () => {
       resetChatState();
       setIsHistoryMode(false);
       setChatType(type);
+      if (type === ChatType.CUSTOMER_SURVEY && !isHistoryMode) {
+        setStartMessage('start')
+      }
       const response = await initChat(type, JSON.stringify(userInfo || {}));
       setChatId(response.id);
       setOpenModal(true);
@@ -107,19 +130,27 @@ const HomePage: React.FC = () => {
       setError('Ошибка при запуске чата');
       console.error('Ошибка при запуске чата:', err);
     }
-  }, [sendMessage, resetChatState]);
+
+  }, [sendMessage, resetChatState,isHistoryMode]);
 
 
   // Открытие истории чата
   const openChatHistory = useCallback(async (chatId: string, messages: Message[]) => {
-    // Сначала закрываем текущий чат и очищаем состояние
+    const response = await GetChatHistory(chatId);
+    if (response.data.status === 'ended') {
+      console.log('Чат завершен');
+      setIsChatEnded(true);
+    } else {
+      setIsChatEnded(false);
+    }
     closeChat();
     handleAudioEnd();
     setIsHistoryMode(true);
     setChatId(chatId);
     setHistoryMessages(messages);
+    setStartMessage(null);
     setOpenModal(true);
-  }, [closeChat, handleAudioEnd,]);
+  }, [closeChat, handleAudioEnd]);
 
   useEffect(() => {
     if (wsState === ReadyState.OPEN && isHistoryMode) {
@@ -176,11 +207,12 @@ const HomePage: React.FC = () => {
 
     // Сначала закрываем модальное окно
     setOpenModal(false);
-    // Затем очищаем все состояния
+    setStartMessage(null);
     setChatId('');
     setChatType(null);
     setUserInfo(null);
     setIsHistoryMode(false);
+    setIsChatEnded(false);
     addMessages([]);
 
     // Закрываем WebSocket соединение
@@ -244,6 +276,7 @@ const HomePage: React.FC = () => {
           openChatById={openChatHistory}
           isHistoryMode={isHistoryMode}
           isAudioPlaying={isAudioPlaying}
+          isChatEnded={isChatEnded}
         />
       )}
       {currentAudioMessage && (

@@ -14,13 +14,6 @@ export const storageService = {
 
   // Сохранить новый чат или обновить существующий
   saveChat: (chat: ChatHistoryItem): void => {
-    // console.log('Сохранение чата в localStorage:', {
-    //   chatId: chat.id,
-    //   type: chat.type,
-    //   timestamp: new Date(chat.timestamp).toLocaleString(),
-    //   messagesCount: chat.messages.length
-    // });
-    
     const history = storageService.getHistory();
     const existingIndex = history.findIndex(item => item.id === chat.id);
     
