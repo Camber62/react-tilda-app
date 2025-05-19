@@ -44,8 +44,14 @@ const HomePage: React.FC = () => {
     setIsHistoryMode(false);
   }, [closeChat, handleAudioEnd]);
 
-  console.log('isHistoryMode', isHistoryMode);
-  console.log('chatType', chatType);
+
+  // Обработка события для открытия модального окна при клике 
+  useEffect(() => {
+    document.addEventListener('TriggerModalEvent', (event) => {
+      handleStartChat(ChatType.MAIN_CHAT_TEST);
+      setOpenModal(true);
+    });
+  }, []);
 
 
   // Обновляем сообщения и сохраняем данные
