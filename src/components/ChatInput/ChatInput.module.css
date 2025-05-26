@@ -138,3 +138,99 @@
     opacity: 0.6;
   }
 }
+
+/* Медиа-запросы для адаптивности */
+@media screen and (max-width: 768px) {
+  .inputContainer,
+  .inputContainerModal {
+    margin: 8px;
+  }
+
+  .input,
+  .inputModal {
+    padding: 12px 16px;
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .customPlaceholder {
+    font-size: 16px;
+    line-height: 20px;
+    left: 16px;
+  }
+
+  .buttonGroup {
+    right: 6px;
+  }
+
+  .micButton,
+  .sendButton {
+    padding: 6px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .loader {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .inputContainer,
+  .inputContainerModal {
+    margin: 6px;
+  }
+
+  .input,
+  .inputModal {
+    padding: 10px 14px;
+    font-size: 16px;
+    line-height: 22px;
+    border-radius: 10px;
+  }
+
+  .customPlaceholder {
+    font-size: 14px;
+    line-height: 18px;
+    left: 14px;
+  }
+
+  .buttonGroup {
+    right: 4px;
+    gap: 2px;
+  }
+
+  .micButton,
+  .sendButton {
+    padding: 4px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .loader {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+}
+
+/* Стили для мобильных устройств в портретной ориентации */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .inputContainerModal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 0;
+    border-top: 1px solid #e0e0e0;
+    background: #fff;
+    z-index: 1000;
+  }
+}
