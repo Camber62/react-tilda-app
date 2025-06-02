@@ -26,6 +26,7 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
+  const [isContentVisible, setIsContentVisible] = useState(false);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
@@ -231,47 +232,57 @@ const HomePage: React.FC = () => {
     closeChat();
   }, [chatId, chatType, isHistoryMode, closeChat, messages]);
 
+  useEffect(() => {
+    // Показываем контент после завершения анимации изображения
+    const timer = setTimeout(() => {
+      setIsContentVisible(true);
+    }, 3500); // 3.5 секунды - время анимации изображения, чтобы контент начал появляться сразу после аватара
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="App">
       <div className="chatContainer">
+        <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
           <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
         </div>
-        <div className="chatContent">
+        <div className={`chatContent ${isContentVisible ? 'visible' : ''}`}>
           <h1 className="greeting">
             Привет! Я ваш помощник в мире образовательных<br /> технологий.
             Хочу помочь трансформировать <br />учебный процесс.
             <span className="botName">Начнем?</span>
           </h1>
           <div className="buttonList">
-            <button className="actionButton">
+            <button className="actionButton buttonFirst">
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
             {(userInfo?.step_1.person_name === null || userInfo === null) && (
               <button
-                className="actionButton"
+                className="actionButton buttonSecond"
                 onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
               >
                 <img src={images.Group9} alt="Lightbulb" className="icon" />
                 Давайте познакомимся
               </button>
             )}
-            <button className="actionButton">
+            <button className="actionButton buttonThird">
               <img src={images.Group10} alt="Map" className="icon" />
               Помогу с навигацией
             </button>
           </div>
-          <div className={styles.inputContainer}>
-            {!openModal && (
+          {!openModal && (
+            <div className={styles.inputContainer}>
               <ChatInput
                 visualMode={true}
                 onSendMessage={sendMessageMainChat}
                 placeholder={`Что Вас интересует сегодня?\nДавайте я помогу найти нужную информацию!`}
                 onError={setError}
               />
-            )}
-          </div>
+            </div>
+          )}
           <div className="bottomButtons">
             <button className="primaryButton">
               <img src={images.Vector} alt="Demo" className="icon" />

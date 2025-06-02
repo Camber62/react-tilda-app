@@ -153,6 +153,7 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
 
         {/* <button onClick={() => {
           storageService.clearAllChats();
+          storageService.deleteUserInfo();
         }}>Удалить историю</button> */}
 
         {showHistory && (
