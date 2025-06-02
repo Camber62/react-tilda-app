@@ -36,7 +36,7 @@ button {
   position: absolute;
   width: 250px;
   height: 250px;
-  opacity: 0;
+  opacity: 1;
   transform-origin: center center;
   will-change: transform, top, left;
 }
