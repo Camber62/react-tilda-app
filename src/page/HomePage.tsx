@@ -26,7 +26,6 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
-  const [isContentVisible, setIsContentVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
@@ -249,18 +248,6 @@ const HomePage: React.FC = () => {
     closeChat();
   }, [chatId, chatType, isHistoryMode, closeChat, messages]);
 
-  useEffect(() => {
-    const handleStartAnimation = () => {
-      console.log('Получено событие startChatAnimation');
-      setIsVisible(true);
-    };
-
-    window.addEventListener('startChatAnimation', handleStartAnimation);
-
-    return () => {
-      window.removeEventListener('startChatAnimation', handleStartAnimation);
-    };
-  }, []);
 
   return (
     <div className={`App ${isVisible ? 'visible' : ''}`}>
@@ -269,7 +256,7 @@ const HomePage: React.FC = () => {
         <div className="chatAvatar">
           <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
         </div>
-        <div className={`chatContent ${isContentVisible ? 'visible' : ''}`}>
+        <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
           <h1 className="greeting">
             Привет! Я ваш помощник в мире образовательных<br /> технологий.
             Хочу помочь трансформировать <br />учебный процесс.
