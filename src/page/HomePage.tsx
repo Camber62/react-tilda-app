@@ -233,12 +233,15 @@ const HomePage: React.FC = () => {
   }, [chatId, chatType, isHistoryMode, closeChat, messages]);
 
   useEffect(() => {
-    // Показываем контент после завершения анимации изображения
-    const timer = setTimeout(() => {
+    const handleStartAnimation = () => {
       setIsContentVisible(true);
-    }, 3500); // 3.5 секунды - время анимации изображения, чтобы контент начал появляться сразу после аватара
+    };
 
-    return () => clearTimeout(timer);
+    window.addEventListener('startChatAnimation', handleStartAnimation);
+
+    return () => {
+      window.removeEventListener('startChatAnimation', handleStartAnimation);
+    };
   }, []);
 
   return (

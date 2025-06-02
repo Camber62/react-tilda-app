@@ -360,7 +360,7 @@ button {
 
 /* Скрываем все элементы до начала анимации */
 .chatContent > * {
-  visibility: hidden;
+  visibility: visible;
 }
 
 .chatContent.visible > * {
