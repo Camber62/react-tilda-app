@@ -36,9 +36,13 @@ button {
   position: absolute;
   width: 250px;
   height: 250px;
-  animation: avatarAppear 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
   transform-origin: center center;
   will-change: transform, top, left;
+}
+
+.App.visible .chatAvatar {
+  animation: avatarAppear 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .chatAvatarPlaceholder {
@@ -53,6 +57,9 @@ button {
   flex: 1;
   padding-top: 1rem;
   opacity: 0;
+}
+
+.App.visible .chatContent {
   animation: contentAppear 0.5s ease-out forwards;
   animation-delay: 4s;
 }
@@ -64,6 +71,9 @@ button {
   line-height: 1.4;
   color: #000;
   opacity: 0;
+}
+
+.App.visible .greeting {
   animation: slideIn 0.5s ease-out forwards;
   animation-delay: 4s;
 }
@@ -103,6 +113,11 @@ button {
   opacity: 0;
 }
 
+.App.visible .actionButton {
+  animation: slideIn 0.5s ease-out forwards;
+  animation-delay: 5s;
+}
+
 .buttonFirst {
   animation: slideIn 0.5s ease-out forwards;
   animation-delay: 5s;
@@ -114,6 +129,21 @@ button {
 }
 
 .buttonThird {
+  animation: slideIn 0.5s ease-out forwards;
+  animation-delay: 7s;
+}
+
+.App.visible .buttonFirst {
+  animation: slideIn 0.5s ease-out forwards;
+  animation-delay: 5s;
+}
+
+.App.visible .buttonSecond {
+  animation: slideIn 0.5s ease-out forwards;
+  animation-delay: 6s;
+}
+
+.App.visible .buttonThird {
   animation: slideIn 0.5s ease-out forwards;
   animation-delay: 7s;
 }
@@ -137,6 +167,9 @@ button {
   margin-bottom: 2rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   opacity: 0;
+}
+
+.App.visible .inputContainer {
   animation: slideIn 0.5s ease-out forwards;
   animation-delay: 8s;
 }
@@ -153,6 +186,9 @@ button {
   margin-top: 3rem;
   gap: 1rem;
   opacity: 0;
+}
+
+.App.visible .bottomButtons {
   animation: slideIn 0.5s ease-out forwards;
   animation-delay: 9s;
 }

@@ -27,6 +27,7 @@ const HomePage: React.FC = () => {
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
   const [isContentVisible, setIsContentVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
@@ -234,7 +235,8 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const handleStartAnimation = () => {
-      setIsContentVisible(true);
+      console.log('Получено событие startChatAnimation');
+      setIsVisible(true);
     };
 
     window.addEventListener('startChatAnimation', handleStartAnimation);
@@ -245,7 +247,7 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className={`App ${isVisible ? 'visible' : ''}`}>
       <div className="chatContainer">
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
