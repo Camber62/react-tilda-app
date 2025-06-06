@@ -239,7 +239,7 @@ const HomePage: React.FC = () => {
     setStartMessage(null);
     setChatId('');
     setChatType(null);
-    setUserInfo(null);
+    // setUserInfo(null);
     setIsHistoryMode(false);
     setIsChatEnded(false);
     addMessages([]);
@@ -267,7 +267,7 @@ const HomePage: React.FC = () => {
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
-            {(userInfo?.step_1.person_name === null || userInfo === null) && (
+            {( userInfo === null || userInfo?.step_1.person_name === null) && (
               <button
                 className="actionButton buttonSecond"
                 onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
