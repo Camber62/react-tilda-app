@@ -5,7 +5,7 @@
   margin: 32px 0 24px 0;
   opacity: 0;
   animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 8s;
+  /* animation-delay: 8s; */
 }
 
 @keyframes slideIn {

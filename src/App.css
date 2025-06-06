@@ -195,7 +195,7 @@ button {
 
 .App.visible .bottomButtons {
   animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 9s;
+  animation-delay: 8s;
 }
 
 .primaryButton {
