@@ -52,7 +52,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !isAudioPlaying) {
       e.preventDefault();
       handleSend();
@@ -115,38 +115,33 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
 
   return (
   <>
-    {!visualMode ? 
-    (<div className={styles.inputContainer}>
-      <input
-        type="text"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        onKeyDown={handleKeyPress}
-        className={styles.inputModal}
-        placeholder=" "
-        disabled={disabled}
-      />
-      <div className={styles.customPlaceholder}>
-        <span>{placeholder}</span>
-      </div>
-      {renderButtonGroup()}
-    </div>
-    ):(
-    <div className={styles.inputContainerModal}>
-      <input
-        type="text"
+    {visualMode ? (
+      <textarea
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         onKeyDown={handleKeyPress}
         className={styles.input}
-        placeholder=" "
+        placeholder={placeholder}
         disabled={disabled}
+        rows={4}
+        style={{resize: 'none'}}
       />
-      <div className={styles.customPlaceholder}>
-        <span>{placeholder}</span>
+    ) : (
+      <div className={styles.inputContainer}>
+        <input
+          type="text"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={handleKeyPress}
+          className={styles.inputModal}
+          placeholder=" "
+          disabled={disabled}
+        />
+        <div className={styles.customPlaceholder}>
+          <span>{placeholder}</span>
+        </div>
+        {renderButtonGroup()}
       </div>
-      {renderButtonGroup()}
-    </div>
     )}
   </>
   );
