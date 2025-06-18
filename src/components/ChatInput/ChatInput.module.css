@@ -183,12 +183,12 @@
   .inputContainer,
   .inputContainerModal {
     position: relative !important;
-    margin: 6px 0 0 0;
-    width: 355px !important;
+    margin: 6px 5px 0 5px;
+    /* width: 355px !important; */
     max-width: 100%;
     border-radius: 10px;
     box-shadow: none;
-    height: 128px !important;
+    /* height: 128px !important; */
     min-height: 128px !important;
     display: block;
     padding-bottom: 48px;
@@ -215,8 +215,8 @@
   .buttonGroup {
     position: absolute !important;
     left: 50% !important;
-    bottom: 10px !important;
-    top: auto !important;
+    /* bottom: 10px !important; */
+    /* top: auto !important; */
     transform: translateX(-50%) !important;
     width: auto !important;
     justify-content: center !important;
