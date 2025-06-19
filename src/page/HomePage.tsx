@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
