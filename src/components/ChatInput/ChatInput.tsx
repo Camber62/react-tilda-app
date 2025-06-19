@@ -116,16 +116,19 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
   return (
   <>
     {visualMode ? (
-      <textarea
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        onKeyDown={handleKeyPress}
-        className={styles.input}
-        placeholder={placeholder}
-        disabled={disabled}
-        rows={4}
-        style={{resize: 'none'}}
-      />
+      <div>
+        <textarea
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={handleKeyPress}
+          className={styles.input}
+          placeholder={placeholder}
+          disabled={disabled}
+          rows={4}
+          style={{resize: 'none'}}
+        />
+        {renderButtonGroup()}
+      </div>
     ) : (
       <div className={styles.inputContainer}>
         <input

@@ -47,7 +47,7 @@ button {
 }
 
 .App.visible .chatAvatar {
-  animation: avatarAppear 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: avatarAppear 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .chatAvatarPlaceholder {
@@ -65,8 +65,8 @@ button {
 }
 
 .App.visible .chatContent {
-  animation: contentAppear 0.5s ease-out forwards;
-  animation-delay: 4s;
+  animation: contentAppear 0.4s ease-out forwards;
+  animation-delay: 3s;
 }
 
 .greeting {
@@ -79,8 +79,8 @@ button {
 }
 
 .App.visible .greeting {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 4s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3s;
 }
 
 .botName {
@@ -119,38 +119,38 @@ button {
 }
 
 .App.visible .actionButton {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 5s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3.5s;
 }
 
 .buttonFirst {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 5s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3.5s;
 }
 
 .buttonSecond {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 6s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3.8s;
 }
 
 .buttonThird {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 7s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 4.1s;
 }
 
 .App.visible .buttonFirst {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 5s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3.5s;
 }
 
 .App.visible .buttonSecond {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 6s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 3.8s;
 }
 
 .App.visible .buttonThird {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 7s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 4.1s;
 }
 
 .actionButton:hover {
@@ -175,8 +175,8 @@ button {
 }
 
 .App.visible .inputContainer {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 8s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 4.5s;
 }
 
 .inputHint {
@@ -194,8 +194,8 @@ button {
 }
 
 .App.visible .bottomButtons {
-  animation: slideIn 0.5s ease-out forwards;
-  animation-delay: 8s;
+  animation: slideIn 0.4s ease-out forwards;
+  animation-delay: 4.5s;
 }
 
 .primaryButton {
@@ -320,7 +320,7 @@ button {
   }
   .App.visible .chatAvatar {
     /* анимация только при visible */
-    animation: avatarAppearMobile 1.2s cubic-bezier(0.4,0,0.2,1) forwards !important;
+    animation: avatarAppearMobile 1s cubic-bezier(0.4,0,0.2,1) forwards !important;
   }
   .chatAvatarPlaceholder {
     display: none;
@@ -366,17 +366,17 @@ button {
     z-index: 1000;
     opacity: 0;
   }
-  5% {
+  8% {
     opacity: 1;
   }
-  30% {
+  35% {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(2);
     z-index: 1000;
     opacity: 1;
   }
-  60% {
+  70% {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(1);

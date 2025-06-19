@@ -52,7 +52,6 @@ export const useChatWS = (
     setReturnFavoriteWork('');
     processedMessageIds.current.clear();
     isSendFerstMessage.current = false;
-    console.log(99999);
   }, [urlWS]);
 
   const { sendJsonMessage, lastJsonMessage, readyState, getWebSocket } = useWebSocket<

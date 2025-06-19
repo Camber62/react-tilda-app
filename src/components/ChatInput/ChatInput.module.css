@@ -215,12 +215,12 @@
   .buttonGroup {
     position: absolute !important;
     left: 50% !important;
-    /* bottom: 10px !important; */
+    bottom: 0 !important;
     /* top: auto !important; */
     transform: translateX(-50%) !important;
     width: auto !important;
     justify-content: center !important;
-    gap: 8px !important;
+    /* gap: 8px !important; */
     display: flex;
   }
   .customPlaceholder {

@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
@@ -118,7 +118,6 @@ const HomePage: React.FC = () => {
 
       if (chatType === ChatType.CUSTOMER_SURVEY && isEndChat && !isAudioPlaying) {
         console.log('Опрос завершен');
-        console.log(isEndChat);
         setTimeout(() => {
           setChatNext(true);
         }, 10);
@@ -183,7 +182,6 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     if (wsState === ReadyState.OPEN && isHistoryMode) {
-      console.log(88888);
       addMessages(historyMessages);
     }
   }, [wsState, historyMessages, addMessages, isHistoryMode])
