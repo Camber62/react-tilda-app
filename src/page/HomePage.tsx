@@ -256,9 +256,9 @@ const HomePage: React.FC = () => {
         </div>
         <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
           <h1 className="greeting">
-            Привет! Я ваш помощник в мире образовательных<br /> технологий.
-            Хочу помочь трансформировать <br />учебный процесс.
-            <span className="botName">Начнем?</span>
+            Привет! Я ваш помощник в мире образовательных технологий.
+            Хочу помочь трансформировать учебный процесс.
+            <span className="botName"> Начнем?</span>
           </h1>
           <div className="buttonList">
             <button className="actionButton buttonFirst">

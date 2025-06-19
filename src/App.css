@@ -47,7 +47,7 @@ button {
 }
 
 .App.visible .chatAvatar {
-  animation: avatarAppear 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: avatarAppear 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .chatAvatarPlaceholder {
@@ -66,13 +66,13 @@ button {
 
 .App.visible .chatContent {
   animation: contentAppear 0.4s ease-out forwards;
-  animation-delay: 3s;
+  animation-delay: 2.2s;
 }
 
 .greeting {
   font-size: 24px;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.4;
   color: #000;
   opacity: 0;
@@ -80,7 +80,7 @@ button {
 
 .App.visible .greeting {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3s;
+  animation-delay: 2.2s;
 }
 
 .botName {
@@ -120,37 +120,37 @@ button {
 
 .App.visible .actionButton {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.5s;
+  animation-delay: 2.7s;
 }
 
 .buttonFirst {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.5s;
+  animation-delay: 2.7s;
 }
 
 .buttonSecond {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.8s;
+  animation-delay: 3s;
 }
 
 .buttonThird {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 4.1s;
+  animation-delay: 3.3s;
 }
 
 .App.visible .buttonFirst {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.5s;
+  animation-delay: 2.7s;
 }
 
 .App.visible .buttonSecond {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.8s;
+  animation-delay: 3s;
 }
 
 .App.visible .buttonThird {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 4.1s;
+  animation-delay: 3.3s;
 }
 
 .actionButton:hover {
@@ -176,7 +176,7 @@ button {
 
 .App.visible .inputContainer {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 4.5s;
+  animation-delay: 3.7s;
 }
 
 .inputHint {
@@ -195,7 +195,7 @@ button {
 
 .App.visible .bottomButtons {
   animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 4.5s;
+  animation-delay: 4s;
 }
 
 .primaryButton {
@@ -446,4 +446,47 @@ button {
 
 .chatContent.visible > * {
   visibility: visible;
+}
+
+/* Мобильные анимации с меньшими задержками */
+@media screen and (max-width: 480px) {
+  .App.visible .chatContent {
+    animation: contentAppear 0.4s ease-out forwards !important;
+    animation-delay: 1s !important;
+  }
+
+  .App.visible .greeting {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 1s !important;
+  }
+
+  .App.visible .actionButton {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 1.3s !important;
+  }
+
+  .App.visible .buttonFirst {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 1.3s !important;
+  }
+
+  .App.visible .buttonSecond {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 1.6s !important;
+  }
+
+  .App.visible .buttonThird {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 1.9s !important;
+  }
+
+  .App.visible .inputContainer {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 2.2s !important;
+  }
+
+  .App.visible .bottomButtons {
+    animation: slideIn 0.4s ease-out forwards !important;
+    animation-delay: 2.7s !important;
+  }
 } 
