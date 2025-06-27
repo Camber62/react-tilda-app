@@ -248,7 +248,7 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <div className={`App ${isVisible ? 'visible' : ''}`}>
+    <div className={`App ${isVisible ? 'visible' : 'none'}`}>
       <div className="chatContainer">
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
