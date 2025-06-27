@@ -3,28 +3,9 @@
   width: 100%;
   max-width: 700px;
   margin: 32px 0 24px 0;
-  opacity: 0;
-  animation: slideIn 0.4s ease-out forwards;
-  animation-delay: 3.7s;
+  opacity: 1;
 }
 
-/* Мобильная версия с меньшей задержкой */
-@media screen and (max-width: 480px) {
-  .inputContainer {
-    animation-delay: 2.2s !important;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 .customPlaceholder {
   position: absolute;
