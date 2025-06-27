@@ -249,7 +249,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className={`App ${isVisible ? 'visible' : ''}`}>
-      <div className={`${isVisible ? "chatContainer": 'none'}`}>
+      <div className={`${isVisible ? "chatContainer": ''}`}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
           <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
