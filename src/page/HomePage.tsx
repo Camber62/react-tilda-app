@@ -27,7 +27,6 @@ const HomePage: React.FC = () => {
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [showMainMenu, setShowMainMenu] = useState(true);
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
@@ -46,7 +45,6 @@ const HomePage: React.FC = () => {
     setIsHistoryMode(false);
   }, [closeChat, handleAudioEnd]);
 
-
   // Обработка события для открытия модального окна при клике 
   useEffect(() => {
     document.addEventListener('TriggerModalEvent', (event) => {
@@ -55,7 +53,6 @@ const HomePage: React.FC = () => {
     });
   }, []);
 
-  
   useEffect(() => {
     const handleElementAboveTop = (event: any) => {
       if (event.detail?.isAbove) {
@@ -249,59 +246,55 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <>
-      {showMainMenu && (
-        <div className={`App ${isVisible ? 'visible' : ''}`}>
-          <div className={"chatContainer"}>
-            <div className="chatAvatarPlaceholder"></div>
-            <div className="chatAvatar">
-              <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
+    <div className={`App ${isVisible ? 'visible' : 'none'}`}>
+      <div className={"chatContainer"}>
+        <div className="chatAvatarPlaceholder"></div>
+        <div className="chatAvatar">
+          <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
+        </div>
+        <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
+          <h1 className="greeting">
+            Привет! Я ваш помощник в мире образовательных технологий.
+            Хочу помочь трансформировать учебный процесс.
+            <span className="botName"> Начнем?</span>
+          </h1>
+          <div className="buttonList">
+            <button className="actionButton buttonFirst">
+              <img src={images.Group12} alt="Phone" className="icon" />
+              Расскажу как повысить вовлеченность
+            </button>
+            {( userInfo === null || userInfo?.step_1.person_name === null) && (
+              <button
+                className="actionButton buttonSecond"
+                onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
+              >
+                <img src={images.Group9} alt="Lightbulb" className="icon" />
+                Давайте познакомимся
+              </button>
+            )}
+            <button className="actionButton buttonThird">
+              <img src={images.Group10} alt="Map" className="icon" />
+              Помогу с навигацией
+            </button>
+          </div>
+          {!openModal && (
+            <div className={styles.inputContainer}>
+              <ChatInput
+                visualMode={true}
+                onSendMessage={sendMessageMainChat}
+                placeholder={`Что Вас интересует сегодня?\nДавайте я помогу найти нужную информацию!`}
+                onError={setError}
+              />
             </div>
-            <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
-              <h1 className="greeting">
-                Привет! Я ваш помощник в мире образовательных технологий.
-                Хочу помочь трансформировать учебный процесс.
-                <span className="botName"> Начнем?</span>
-              </h1>
-              <div className="buttonList">
-                <button className="actionButton buttonFirst">
-                  <img src={images.Group12} alt="Phone" className="icon" />
-                  Расскажу как повысить вовлеченность
-                </button>
-                {( userInfo === null || userInfo?.step_1.person_name === null) && (
-                  <button
-                    className="actionButton buttonSecond"
-                    onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
-                  >
-                    <img src={images.Group9} alt="Lightbulb" className="icon" />
-                    Давайте познакомимся
-                  </button>
-                )}
-                <button className="actionButton buttonThird">
-                  <img src={images.Group10} alt="Map" className="icon" />
-                  Помогу с навигацией
-                </button>
-              </div>
-              {!openModal && (
-                <div className={styles.inputContainer}>
-                  <ChatInput
-                    visualMode={true}
-                    onSendMessage={sendMessageMainChat}
-                    placeholder={`Что Вас интересует сегодня?\nДавайте я помогу найти нужную информацию!`}
-                    onError={setError}
-                  />
-                </div>
-              )}
-              <div className="bottomButtons">
-                <button className="primaryButton">
-                  <img src={images.Vector} alt="Demo" className="icon" />
-                  ЗАПРОСИТЬ ДЕМОСЕССИЮ
-                </button>
-              </div>
-            </div>
+          )}
+          <div className="bottomButtons">
+            <button className="primaryButton">
+              <img src={images.Vector} alt="Demo" className="icon" />
+              ЗАПРОСИТЬ ДЕМОСЕССИЮ
+            </button>
           </div>
         </div>
-      )}
+      </div>
       {openModal && (
         <Modal
           setOpen={setOpenModal}
@@ -324,7 +317,7 @@ const HomePage: React.FC = () => {
           volume={100}
         />
       )}
-    </>
+    </div>
   );
 };
 
