@@ -57,16 +57,16 @@ const HomePage: React.FC = () => {
     const handleElementAboveTop = (event: any) => {
       if (event.detail?.isAbove) {
         setIsVisible(true);
-      } 
+      }
     };
-  
+
     window.addEventListener('ElementAboveTop', handleElementAboveTop);
-  
+
     return () => {
       window.removeEventListener('ElementAboveTop', handleElementAboveTop);
     };
   }, []);
-  
+
 
   useEffect(() => {
     const userInfo = storageService.getUserInfo();
@@ -246,8 +246,8 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <div className={`App ${isVisible ? 'visible' : 'none'}`}>
-      <div className={"chatContainer"}>
+    <div className={`App ${isVisible ? 'visible' : ''}`}>
+      {isVisible && <div className={"chatContainer"}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
           <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
@@ -263,7 +263,7 @@ const HomePage: React.FC = () => {
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
-            {( userInfo === null || userInfo?.step_1.person_name === null) && (
+            {(userInfo === null || userInfo?.step_1.person_name === null) && (
               <button
                 className="actionButton buttonSecond"
                 onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
@@ -294,7 +294,7 @@ const HomePage: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div>}
       {openModal && (
         <Modal
           setOpen={setOpenModal}
