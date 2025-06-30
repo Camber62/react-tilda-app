@@ -27,6 +27,8 @@ const HomePage: React.FC = () => {
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [showPage, setShowPage] = useState(true);
+
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
@@ -57,6 +59,12 @@ const HomePage: React.FC = () => {
     const handleElementAboveTop = (event: any) => {
       if (event.detail?.isAbove) {
         setIsVisible(true);
+      }
+      if (event.detail?.showPage === false) {
+        setShowPage(false);
+      }
+      if (event.detail?.showPage === true) {
+        setShowPage(true);
       }
     };
 
@@ -247,7 +255,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className={`App ${isVisible ? 'visible' : ''}`}>
-      {isVisible && <div className={"chatContainer"}>
+      {showPage && <div className={"chatContainer"}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
           <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
