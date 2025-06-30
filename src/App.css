@@ -1,12 +1,12 @@
 .App {
-  position: relative;
+  /* position: relative; */
   /* min-height: 100vh; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
   /* background-color: #f0f2f5; */
   /* padding: 20px; */
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 /* * {
