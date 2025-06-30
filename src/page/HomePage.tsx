@@ -62,9 +62,11 @@ const HomePage: React.FC = () => {
       }
       if (event.detail?.showPage === false) {
         setShowPage(false);
+        console.log('showPage', false);
       }
       if (event.detail?.showPage === true) {
         setShowPage(true);
+        console.log('showPage', true);
       }
     };
 
