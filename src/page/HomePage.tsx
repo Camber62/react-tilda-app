@@ -60,14 +60,14 @@ const HomePage: React.FC = () => {
       if (event.detail?.isAbove) {
         setIsVisible(true);
       }
-      if (event.detail?.showPage === false) {
+      if (!event.detail?.showPage) {
         setShowPage(false);
         console.log('showPage', false);
       }
-      if (event.detail?.showPage === true) {
-        setShowPage(true);
-        console.log('showPage', true);
-      }
+      // if (event.detail?.showPage === true) {
+      //   setShowPage(true);
+      //   console.log('showPage', true);
+      // }
     };
 
     window.addEventListener('ElementAboveTop', handleElementAboveTop);
