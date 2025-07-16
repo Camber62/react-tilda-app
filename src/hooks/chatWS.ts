@@ -122,6 +122,17 @@ export const useChatWS = (
     [sendJsonMessage]
   );
 
+  // Функция отправки скрытого сообщения (не добавляет в returnMessages)
+  const sendHiddenMessage = useCallback(
+    (message: string) => {
+      sendJsonMessage({
+        command: 'send_message',
+        body: { text: message },
+      });
+    },
+    [sendJsonMessage]
+  );
+
   // Функция закрытия чата
   const closeChat = useCallback(() => {
     if (readyState === ReadyState.OPEN) {
@@ -202,5 +213,6 @@ export const useChatWS = (
     closeChat: closeChat,//функция закрытия чата
     addMessages: addMessages,//функция добавления сообщения
     wsState: getWebSocket()?.readyState,
+    sendHiddenMessage, // добавляем новую функцию
   };
 };

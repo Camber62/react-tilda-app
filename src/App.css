@@ -409,7 +409,7 @@ button {
     opacity: 1;
   }
   100% {
-    top: 170px;
+    top: 130px;
     left: 0;
     transform: none;
     z-index: 1;

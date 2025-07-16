@@ -5,6 +5,7 @@ import { ChatHistoryItem, Message } from '../../types/chat';
 import ChatInput from '../ChatInput/ChatInput';
 import LoadingDots from '../LoadingDots/LoadingDots';
 import styles from './Modal.module.css';
+import ReactMarkdown from 'react-markdown';
 
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -122,11 +123,11 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
                         className={styles['message-avatar']}
                       />
                       <div className={styles['message-bubble']}>
-                        <p>{msg.text}</p>
+                        <ReactMarkdown>{msg.text}</ReactMarkdown>
                       </div>
                     </div>
                   ))}
-                  {showLoadingDots && (
+                  {!showLoadingDots && (
                     <div className={`${styles.message} ${styles['bot-message']}`}>
                       <LoadingDots />
                     </div>

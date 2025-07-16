@@ -199,7 +199,7 @@
   .inputContainer,
   .inputContainerModal {
     position: relative !important;
-    margin: 6px 5px 0 5px;
+    margin: 12px auto;
     /* width: 355px !important; */
     max-width: 100%;
     border-radius: 10px;
@@ -207,7 +207,7 @@
     /* height: 128px !important; */
     min-height: 128px !important;
     display: block;
-    padding-bottom: 48px;
+    /* padding-bottom: 48px; */
   }
   .input,
   .inputModal {
@@ -236,7 +236,7 @@
     transform: translateX(-50%) !important;
     width: auto !important;
     justify-content: center !important;
-    /* gap: 8px !important; */
+    gap: 0px !important;
     display: flex;
   }
   .customPlaceholder {

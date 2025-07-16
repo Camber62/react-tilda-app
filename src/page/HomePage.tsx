@@ -26,10 +26,10 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [showPage, setShowPage] = useState(true);
 
-  const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat } = useChatWS(
+  const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat, sendHiddenMessage } = useChatWS(
     startMessage || undefined,
     chatId ? `${WS_URL_PREFIX}${chatId}` : undefined,
     chatType ?? undefined
@@ -146,7 +146,7 @@ const HomePage: React.FC = () => {
 
 
   // Инициализация нового чата
-  const initChatSession = useCallback(async (type: ChatType, initialMessage?: string, userInfo?: ChatJsonData) => {
+  const initChatSession = useCallback(async (type: ChatType, initialMessage?: string, userInfo?: ChatJsonData, hidden?: boolean) => {
     try {
       resetChatState();
       setIsHistoryMode(false);
@@ -160,14 +160,18 @@ const HomePage: React.FC = () => {
 
       if (initialMessage) {
         await new Promise(resolve => setTimeout(resolve, 10));
-        sendMessage(initialMessage);
+        if (hidden) {
+          sendHiddenMessage(initialMessage);
+        } else {
+          sendMessage(initialMessage);
+        }
       }
     } catch (err) {
       setError('Ошибка при запуске чата');
       console.error('Ошибка при запуске чата:', err);
     }
 
-  }, [sendMessage, resetChatState, isHistoryMode]);
+  }, [sendMessage, sendHiddenMessage, resetChatState, isHistoryMode]);
 
 
   // Открытие истории чата
@@ -269,11 +273,14 @@ const HomePage: React.FC = () => {
             <span className="botName"> Начнем?</span>
           </h1>
           <div className="buttonList">
-            <button className="actionButton buttonFirst">
+            <button
+              className="actionButton buttonFirst"
+              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Расскажу как повысить вовлеченность', undefined, true)}
+            >
               <img src={images.Group12} alt="Phone" className="icon" />
               Расскажу как повысить вовлеченность
             </button>
-            {(userInfo === null || userInfo?.step_1.person_name === null) && (
+            {(userInfo === null || userInfo?.step_9.missing_features === null) && (
               <button
                 className="actionButton buttonSecond"
                 onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
@@ -282,7 +289,10 @@ const HomePage: React.FC = () => {
                 Давайте познакомимся
               </button>
             )}
-            <button className="actionButton buttonThird">
+            <button
+              className="actionButton buttonThird"
+              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Помогу с навигацией', undefined, true)}
+            >
               <img src={images.Group10} alt="Map" className="icon" />
               Помогу с навигацией
             </button>
