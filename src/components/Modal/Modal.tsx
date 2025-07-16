@@ -127,7 +127,7 @@ const Modal: React.FC<ModalProps> = ({ messages, onSendMessage, isLoading = fals
                       </div>
                     </div>
                   ))}
-                  {!showLoadingDots && (
+                  {showLoadingDots && (
                     <div className={`${styles.message} ${styles['bot-message']}`}>
                       <LoadingDots />
                     </div>
