@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/react-tilda-app/static/css/main.d181165b.css",
-    "main.js": "/react-tilda-app/static/js/main.581f16c3.js",
+    "main.css": "/react-tilda-app/static/css/main.07d787fb.css",
+    "main.js": "/react-tilda-app/static/js/main.d30dfbd2.js",
     "static/js/5.48a6e157.chunk.js": "/react-tilda-app/static/js/5.48a6e157.chunk.js",
     "static/js/806.ff53f4fe.chunk.js": "/react-tilda-app/static/js/806.ff53f4fe.chunk.js",
     "index.html": "/react-tilda-app/index.html",
-    "main.d181165b.css.map": "/react-tilda-app/static/css/main.d181165b.css.map",
-    "main.581f16c3.js.map": "/react-tilda-app/static/js/main.581f16c3.js.map",
+    "main.07d787fb.css.map": "/react-tilda-app/static/css/main.07d787fb.css.map",
+    "main.d30dfbd2.js.map": "/react-tilda-app/static/js/main.d30dfbd2.js.map",
     "5.48a6e157.chunk.js.map": "/react-tilda-app/static/js/5.48a6e157.chunk.js.map",
     "806.ff53f4fe.chunk.js.map": "/react-tilda-app/static/js/806.ff53f4fe.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d181165b.css",
-    "static/js/main.581f16c3.js"
+    "static/css/main.07d787fb.css",
+    "static/js/main.d30dfbd2.js"
   ]
 }

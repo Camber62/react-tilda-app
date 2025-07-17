@@ -264,7 +264,14 @@ const HomePage: React.FC = () => {
       {showPage && <div className={"chatContainer"}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
-          <img src={images.Frame3} alt="ChatBot Avatar" className="glowingOrb" />
+          <video 
+            src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4" 
+            className="glowingOrb" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+          />
         </div>
         <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
           <h1 className="greeting">
@@ -308,7 +315,10 @@ const HomePage: React.FC = () => {
             </div>
           )}
           <div className="bottomButtons">
-            <button className="primaryButton">
+            <button
+              className="primaryButton"
+              onClick={() => window.open('https://project13116613.tilda.ws/#form')}
+            >
               <img src={images.Vector} alt="Demo" className="icon" />
               ЗАПРОСИТЬ ДЕМОСЕССИЮ
             </button>

@@ -444,6 +444,8 @@ button {
   height: 100%;
   object-fit: contain;
   animation: glow 4s ease-in-out infinite;
+  border-radius: 50%;
+
 }
 
 @keyframes glow {

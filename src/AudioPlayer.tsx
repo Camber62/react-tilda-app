@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import ReactHowler from "react-howler";
 import { StringSplitting } from "./tools/StringSplitting";
 import API from "./api";
+import { useTextCleanup } from "./hooks/useTextCleanup";
 
 interface TextToSpeechResponse {
     audio_file_url: string;
@@ -30,6 +31,7 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
     const [currentTrackUrl, setCurrentTrackUrl] = useState<string | undefined>(undefined);
 
     const playerRef = useRef<ReactHowler | null>(null);
+    const textCleanup = useTextCleanup();
 
     const playerVolume = useMemo(() => {
         const normalizedVolume = (volume ?? 100) / 100;
@@ -60,7 +62,14 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
     const convertTextToAudio = useCallback(async (text: string, index: number) => {
         // console.log("convertTextToAudio called with text:", text, "index:", index);
         try {
-            const response: TextToSpeechResponse = await API.textToSpeechAPI(text);
+            // Очищаем текст от ссылок и маркдауна
+            const cleanedText = textCleanup(text);
+            // Сначала обрабатываем текст через справочник озвучки
+            const transcriptionResponse = await API.replaceTranscriptionsAPI(cleanedText);
+            const processedText = transcriptionResponse.transcribed_text || cleanedText;
+            
+            // Затем отправляем обработанный текст на озвучку
+            const response: TextToSpeechResponse = await API.textToSpeechAPI(processedText);
             // console.log("API response:", response);
             if (response && response.audio_file_url) {
                 setAudioTracks((prev) => [...prev, { index, url: response.audio_file_url }]);
@@ -70,7 +79,7 @@ export const AudioPlayer: React.FC<PlayerProps> = ({
         } catch (error) {
             console.error("Ошибка при преобразовании текста в аудио:", error);
         }
-    }, []);
+    }, [textCleanup]);
 
     useEffect(() => {
         // console.log("textChunks updated:", textChunks);
