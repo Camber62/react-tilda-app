@@ -3,6 +3,7 @@ import { images } from '../../config/images';
 import { useAudioRecording } from '../../hooks/useAudioRecording';
 import { AudioPreview } from '../AudioPreview';
 import styles from './ChatInput.module.css';
+import modalStyles from '../Modal/Modal.module.css';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -86,7 +87,7 @@ const ChatInput: React.FC<ChatInputProps> = ({visualMode, onSendMessage, placeho
     if (isSending || isRecognizing) {
       return (
         <div className={styles.buttonGroup}>
-          <div className={styles.loader}>Распознавание...</div>
+          <div className={modalStyles['loading-spinner']}></div>
         </div>
       );
     }
