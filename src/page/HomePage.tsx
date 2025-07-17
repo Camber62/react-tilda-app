@@ -156,6 +156,13 @@ const HomePage: React.FC = () => {
       }
       const response = await initChat(type, JSON.stringify(userInfo || {}));
       setChatId(response.id);
+      
+      // Сохраняем ID чата опроса в localStorage
+      if (type === ChatType.CUSTOMER_SURVEY) {
+        storageService.saveSurveyChatId(response.id);
+        // console.log('Новый чат', response.id);
+      }
+      
       setOpenModal(true);
 
       if (initialMessage) {
@@ -226,6 +233,34 @@ const HomePage: React.FC = () => {
     initChatSession(type);
   }, [initChatSession]);
 
+  // Обработка клика на кнопку "Давайте познакомимся"
+  const handleStartSurvey = useCallback(async () => {
+    try {
+      // Проверяем, есть ли у пользователя имя
+      if (storageService.hasUserName()) {
+        // Если имя есть, получаем ID сохраненного чата опроса
+        const savedChatId = storageService.getSurveyChatId();
+        if (savedChatId) {
+          // Продолжаем существующий чат
+          const chatHistory = storageService.getHistory();
+          const existingChat = chatHistory.find(chat => chat.id === savedChatId);
+          if (existingChat) {
+            console.log('Продолжаем существующий чат опроса:', savedChatId);
+            openChatHistory(savedChatId, existingChat.messages);
+            return;
+          }
+        }
+      }
+      
+      // Если имени нет или чат не найден, начинаем новый опрос
+      console.log('Начинаем новый чат опроса');
+      initChatSession(ChatType.CUSTOMER_SURVEY, undefined, userInfo || undefined);
+    } catch (err) {
+      setError('Ошибка при запуске опроса');
+      console.error('Ошибка при запуске опроса:', err);
+    }
+  }, [userInfo, initChatSession, openChatHistory]);
+
   // Отправка сообщения в основной чат
   const sendMessageMainChat = useCallback(async (text: string) => {
     initChatSession(ChatType.MAIN_CHAT, text);
@@ -290,7 +325,7 @@ const HomePage: React.FC = () => {
             {(userInfo === null || userInfo?.step_9.missing_features === null) && (
               <button
                 className="actionButton buttonSecond"
-                onClick={() => handleStartChat(ChatType.CUSTOMER_SURVEY)}
+                onClick={handleStartSurvey}
               >
                 <img src={images.Group9} alt="Lightbulb" className="icon" />
                 Давайте познакомимся

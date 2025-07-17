@@ -360,27 +360,6 @@ button {
     animation: slideInRight 0.4s ease-out forwards !important;
     animation-delay: 1s !important;
   }
-  .App.visible .greeting {
-    /* Удалена анимация */
-  }
-  .App.visible .actionButton {
-    /* Удалена анимация */
-  }
-  .App.visible .buttonFirst {
-    /* Удалена анимация */
-  }
-  .App.visible .buttonSecond {
-    /* Удалена анимация */
-  }
-  .App.visible .buttonThird {
-    /* Удалена анимация */
-  }
-  .App.visible .inputContainer {
-    /* Удалена анимация */
-  }
-  .App.visible .bottomButtons {
-    /* Удалена анимация */
-  }
 }
 
 @keyframes avatarAppear {

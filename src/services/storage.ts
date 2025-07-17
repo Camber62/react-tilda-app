@@ -2,6 +2,7 @@ import { ChatHistoryItem, Message, ChatJsonData } from '../types/chat';
 
 const STORAGE_KEY = 'chat_history';
 const USER_INFO_KEY = 'user_info';
+const SURVEY_CHAT_ID_KEY = 'survey_chat_id';
 
 export const storageService = {
   // Получить всю историю чатов
@@ -72,6 +73,29 @@ export const storageService = {
   // Удалить информацию о пользователе
   deleteUserInfo: (): void => {
     localStorage.removeItem(USER_INFO_KEY);
+  },
+
+  // Сохранить ID чата опроса
+  saveSurveyChatId: (chatId: string): void => {
+    localStorage.setItem(SURVEY_CHAT_ID_KEY, chatId);
+  },
+
+  // Получить ID чата опроса
+  getSurveyChatId: (): string | null => {
+    return localStorage.getItem(SURVEY_CHAT_ID_KEY);
+  },
+
+  // Удалить ID чата опроса
+  deleteSurveyChatId: (): void => {
+    localStorage.removeItem(SURVEY_CHAT_ID_KEY);
+  },
+
+  // Проверить, есть ли у пользователя имя
+  hasUserName: (): boolean => {
+    const userInfo = storageService.getUserInfo();
+    return userInfo?.step_1?.person_name !== null && 
+           userInfo?.step_1?.person_name !== undefined && 
+           userInfo?.step_1?.person_name.trim() !== '';
   },
 
 }; 
