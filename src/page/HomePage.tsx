@@ -315,13 +315,6 @@ const HomePage: React.FC = () => {
             <span className="botName"> Начнем?</span>
           </h1>
           <div className="buttonList">
-            <button
-              className="actionButton buttonFirst"
-              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Расскажу как повысить вовлеченность', undefined, true)}
-            >
-              <img src={images.Group12} alt="Phone" className="icon" />
-              Расскажу как повысить вовлеченность
-            </button>
             {(userInfo === null || userInfo?.step_9.missing_features === null) && (
               <button
                 className="actionButton buttonSecond"
@@ -337,6 +330,13 @@ const HomePage: React.FC = () => {
             >
               <img src={images.Group10} alt="Map" className="icon" />
               Помогу с навигацией
+            </button>
+            <button
+              className="actionButton buttonFirst"
+              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Расскажу как повысить вовлеченность', undefined, true)}
+            >
+              <img src={images.Group12} alt="Phone" className="icon" />
+              Расскажу как повысить вовлеченность
             </button>
           </div>
           {!openModal && (
