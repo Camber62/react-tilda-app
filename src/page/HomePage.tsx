@@ -352,7 +352,7 @@ const HomePage: React.FC = () => {
           <div className="bottomButtons">
             <button
               className="primaryButton"
-              onClick={() => window.open('https://project13116613.tilda.ws/#form')}
+              onClick={() => window.open('https://edtech4.org/#form')}
             >
               <img src={images.Vector} alt="Demo" className="icon" />
               ЗАПРОСИТЬ ДЕМОСЕССИЮ
