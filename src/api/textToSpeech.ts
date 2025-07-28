@@ -37,10 +37,10 @@ export interface TextToSpeechResponse {
 export const textToSpeechAPI = async (text: string): Promise<TextToSpeechResponse> => {
     const params: TextToSpeechParams = {
         model_tts: "y-TTS",
-        voice: "ermil",
+        voice: "zahar",
         language: "ru-RU",
-        speed: "1.0",
-        tone: "neutral",
+        speed: "1.5",
+        tone: "good",
         text: text,
         ssml: false,
         filter_profanity: false,
