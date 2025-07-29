@@ -82,4 +82,11 @@
 .micButton[data-recording="true"] {
   background: #ff4444;
   color: white;
+}
+
+/* Медиа-запрос для мобильной версии */
+@media screen and (max-width: 768px) {
+  .inputContainer {
+    width: fit-content;
+  }
 } 
