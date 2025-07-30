@@ -300,12 +300,14 @@ const HomePage: React.FC = () => {
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
           <video 
-            src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4" 
+            src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001" 
             className="glowingOrb" 
             autoPlay 
             loop 
             muted 
             playsInline
+            preload="metadata"
+            style={{ userSelect: 'none' }}
           />
         </div>
         <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
