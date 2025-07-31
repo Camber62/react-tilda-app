@@ -299,17 +299,28 @@ const HomePage: React.FC = () => {
       {showPage && <div className={"chatContainer"}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
-          <video 
-            src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001" 
-            className="glowingOrb" 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            preload="metadata"
-            style={{ userSelect: 'none' }}
-          />
-        </div>
+            <video
+              id="video"
+              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001"
+              className="glowingOrb"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+              onError={(e) => console.error('Video error:', (e.target as HTMLVideoElement).error)}
+            >
+              <source src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001" type="video/mp4" />
+            </video>
+            <img
+              id="img"
+              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001"
+              className="glowingOrb"
+              alt="Fallback video"
+              style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'none' }}
+            />
+          </div>
         <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
           <h1 className="greeting">
             Привет! Я ваш помощник в мире образовательных технологий.
