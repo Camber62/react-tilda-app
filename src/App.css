@@ -259,8 +259,10 @@ button {
     margin: 0 auto 1rem auto !important;
     position: static;
     /* начальное состояние */
-    transform: scale(0.3);
-    opacity: 0;
+    /* transform: scale(0.3);
+    opacity: 0; */
+    transform: none; /* Уберите scale(0.3) */
+    opacity: 1; /* Уберите opacity: 0 */
   }
   .App.visible .chatAvatar {
     /* анимация только при visible */
