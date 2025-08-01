@@ -67,7 +67,6 @@ const HomePage: React.FC = () => {
       // if (event.detail?.showPage === true) {
       //   setShowPage(true);
       //   console.log('showPage', true);
-      // }
     };
 
     window.addEventListener('ElementAboveTop', handleElementAboveTop);
@@ -299,26 +298,13 @@ const HomePage: React.FC = () => {
       {showPage && <div className={"chatContainer"}>
         <div className="chatAvatarPlaceholder"></div>
         <div className="chatAvatar">
-            <video
-              id="video"
-              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001"
-              className="glowingOrb"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-              onError={(e) => console.error('Video error:', (e.target as HTMLVideoElement).error)}
-            >
-              <source src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001" type="video/mp4" />
-            </video>
             <img
-              id="img"
-              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.mp4#t=0.001"
+              id="avatar-gif"
+              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.gif"
               className="glowingOrb"
-              alt="Fallback video"
-              style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'none' }}
+              alt="Avatar animation"
+              style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+              onError={(e) => console.error('Image error:', e)}
             />
           </div>
         <div className={`chatContent ${isVisible ? 'visible' : ''}`}>
