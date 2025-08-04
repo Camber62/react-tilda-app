@@ -155,6 +155,20 @@
   }
 }
 
+/* Планшеты (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .input,
+  .inputModal {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .customPlaceholder {
+    font-size: 15px;
+    line-height: 20px;
+  }
+}
+
 /* Медиа-запросы для адаптивности */
 @media screen and (max-width: 768px) {
   .inputContainer,

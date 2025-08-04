@@ -28,6 +28,7 @@ button {
   opacity: 1;
   transform-origin: center center;
   will-change: transform, top, left;
+  border-radius: 50%;
   /* Правки */
   top: 50%;
   left: 50%;
@@ -187,6 +188,144 @@ button {
   .primaryButton {
     font-size: 20px;
     padding: 8px 30px;
+  }
+}
+
+/* Планшеты (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .chatContainer {
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+    max-width: 100%;
+    min-height: 100vh;
+    align-items: center;
+  }
+
+  .chatAvatarPlaceholder {
+    width: 200px;
+    height: 200px;
+    margin-right: 40px;
+    margin-top: 4rem;
+    flex: 0 0 200px;
+  }
+
+  .chatAvatar {
+    width: 200px;
+    height: 200px;
+  }
+
+  .App.visible .chatAvatar {
+    animation: avatarAppearTablet 1.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .chatContent {
+    flex: 1;
+    max-width: 600px;
+    padding-top: 2rem;
+  }
+
+  .greeting {
+    font-size: 28px;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .buttonList {
+    margin-bottom: 2rem;
+  }
+
+  .actionButton {
+    padding: 12px 20px 12px 20px;
+    font-size: 24px;
+    margin-bottom: 12px;
+    min-height: 60px;
+    border-radius: 30px;
+    max-width: 500px;
+    justify-content: flex-start;
+  }
+
+  .actionButton .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+
+  .primaryButton {
+    padding: 15px 40px;
+    font-size: 24px;
+    min-height: 60px;
+    border-radius: 30px;
+    max-width: 500px;
+    margin-bottom: 1rem;
+  }
+
+  .primaryButton .icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .bottomButtons {
+    margin-top: 2rem;
+  }
+}
+
+/* Планшеты в портретном режиме (769px - 834px) */
+@media screen and (min-width: 769px) and (max-width: 834px) and (orientation: portrait) {
+  .chatContainer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    gap: .5rem;
+  }
+
+  .chatAvatarPlaceholder {
+    display: none;
+  }
+
+  .chatAvatar {
+    position: static;
+    margin: 1rem auto 2rem auto;
+    transform: none;
+  }
+
+  .App.visible .chatAvatar {
+    animation: avatarAppearTablet 1.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .chatContent {
+    width: 100%;
+    max-width: 600px;
+    padding-top: 0;
+  }
+
+  .greeting {
+    text-align: center;
+    font-size: 26px;
+  }
+
+  .buttonList {
+    align-items: center;
+    width: 100%;
+  }
+
+  .actionButton {
+    width: 100%;
+    max-width: 500px;
+    justify-content: flex-start;
+    padding: 12px 20px 12px 20px;
+  }
+
+  .primaryButton {
+    width: 100%;
+    max-width: 500px;
+    justify-content: center;
+  }
+
+  .bottomButtons {
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -354,6 +493,17 @@ button {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes avatarAppearTablet {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

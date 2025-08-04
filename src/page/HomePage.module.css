@@ -84,6 +84,53 @@
   color: white;
 }
 
+/* Планшеты (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .inputContainer {
+    max-width: 600px;
+    margin: 40px auto 32px auto;
+  }
+
+  .input {
+    height: 80px;
+    padding: 15px 100px 15px 20px;
+    font-size: 20px;
+    border-radius: 25px;
+  }
+
+  .input::placeholder {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .customPlaceholder {
+    left: 20px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .sendButton, .micButton {
+    height: 42px;
+    width: 42px;
+    min-width: 42px;
+    font-size: 20px;
+  }
+
+  .buttonGroup {
+    padding-right: 15px;
+    gap: 6px;
+  }
+}
+
+/* Планшеты в портретном режиме */
+@media screen and (min-width: 769px) and (max-width: 834px) and (orientation: portrait) {
+  .inputContainer {
+    width: 100%;
+    max-width: 500px;
+    margin: 32px auto;
+  }
+}
+
 /* Медиа-запрос для мобильной версии */
 @media screen and (max-width: 768px) {
   .inputContainer {
