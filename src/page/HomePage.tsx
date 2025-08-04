@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
   const [chatNext, setChatNext] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [startMessage, setStartMessage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [showPage, setShowPage] = useState(true);
 
   const { messages, isWaiting: isLoading, sendMessage, closeChat, addMessages, wsState, isEndChat, sendHiddenMessage } = useChatWS(
@@ -300,7 +300,7 @@ const HomePage: React.FC = () => {
         <div className="chatAvatar">
             <img
               id="avatar-gif"
-              src="https://github.com/Camber62/content/raw/refs/heads/main/1-2.gif"
+              src="https://raw.githubusercontent.com/Camber62/content/main/1-2mb.gif"
               className="glowingOrb"
               alt="Avatar animation"
               style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
