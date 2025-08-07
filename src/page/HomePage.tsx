@@ -300,7 +300,7 @@ const HomePage: React.FC = () => {
         <div className="chatAvatar">
             <img
               id="avatar-gif"
-              src="https://raw.githubusercontent.com/Camber62/content/main/1-2mb.gif"
+              src="https://storage.yandexcloud.net/cdn-deeptalk/edtech4.org/1-2mb.gif"
               className="glowingOrb"
               alt="Avatar animation"
               style={{ userSelect: 'none', width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
