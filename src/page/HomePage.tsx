@@ -332,10 +332,10 @@ const HomePage: React.FC = () => {
             </button>
             <button
               className="actionButton buttonFirst"
-              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Расскажу как повысить вовлеченность', undefined, true)}
+              onClick={() => initChatSession(ChatType.MAIN_CHAT, 'Расскажу, как повысить вовлеченность', undefined, true)}
             >
               <img src={images.Group12} alt="Phone" className="icon" />
-              Расскажу как повысить вовлеченность
+              Расскажу, как повысить вовлеченность
             </button>
           </div>
           {!openModal && (
